@@ -8,11 +8,12 @@ p parsed["desc"]["someKey"]
 p parsed["main_item"]["stats"]["a"]
 
 # Read JSON from a file, iterate over objects
-file = open("one_card_section.json")
+file = open("input/one_card_section.json")
 json = file.read
 
 parsed = JSON.parse(json)
 @tags = JSON.parse( json )[ "cards" ]
 @tags.each do |item| 
-  puts item["id"]
+  puts "All items: #{item}"
+  puts "Only the id: #{item["id"]}"
 end

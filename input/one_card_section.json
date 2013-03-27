@@ -1,9 +1,40 @@
 {
-"cards":[
-	{
-	"id":"5136b05de221493a09000b39",
-	"checkItemStates":[],
-	"closed":false
-	}
-]
+	"labelNames":{
+		"yellow":"",
+		"red":"",
+		"purple":"Notes",
+		"orange":"Read",
+		"green":"",
+		"blue":"Write"
+		},
+	"lists":[
+		{
+		"id":"12345",
+		"name":"Waiting for",
+		"closed":false,
+		"idBoard":"555555",
+		"pos":4096,
+		"subscribed":false
+		},
+		{
+		"id":"88888",
+		"name":"Could Do",
+		"closed":false,
+		"idBoard":"99999",
+		"pos":8192,
+		"subscribed":false
+		}
+	],
+	"cards":[
+		{
+		"id":"1111122222",
+		"checkItemStates":[],
+		"closed":false,
+		"name":"This is a foo card",
+		"pos":131071,
+		"shortUrl":"https://trello.com/",
+		"subscribed":false,
+		"url":"https://trello.com/card/"
+		}
+	]
 }

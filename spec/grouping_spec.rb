@@ -40,17 +40,17 @@ describe Grouping do
     end
   end
 
-  describe "#formatsGroup" do 
+  describe "#formatsOneGroup" do 
     it "returns a string when given a valid title" do 
-      @example_card.formatsGroup("labelNames").kind_of?(String).should be_true
+      @example_card.formatsOneGroup("labelNames").kind_of?(String).should be_true
     end
 
     it "returns a string when given a bad title" do 
-      @example_card.formatsGroup("foo").kind_of?(String).should be_true
+      @example_card.formatsOneGroup("foo").kind_of?(String).should be_true
     end
 
     it "returns an explaination when given a bad title" do 
-      @example_card.formatsGroup("foo").index("associated").should_not be_nil
+      @example_card.formatsOneGroup("foo").index("associated").should_not be_nil
     end
   end
 

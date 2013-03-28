@@ -6,12 +6,25 @@ class Grouping
   	@parsed = parsed_json
   end
 
-  def formatsGroup(title, *desired_qualities)
+  def formatsOneGroup(title, *desired_qualities)
   	message = "#{title}\n"
-  	qualities_count = 1
 
-  	qualities_location = groupIsHidingInAnArray?(title)
-  	
+  	if groupIsHidingInAnArray?(title) then
+  		@parsed[title].each do |item|
+  			qualities_location = item
+  			message << formatsOneSubGroup(title, qualities_location, *desired_qualities)
+  		end
+  	else
+  		qualities_location = @parsed[title]
+  		message << formatsOneSubGroup(title, qualities_location, *desired_qualities)
+  	end
+  	message << "\n"
+  	return message
+  end
+
+  def formatsOneSubGroup(title, qualities_location, *desired_qualities)
+  	message = "" 
+  	qualities_count = 1
   	if validTitle?(title)
 	  	qualities_location.each do |key, value|
 	  		if desired_qualities != []
@@ -35,7 +48,7 @@ class Grouping
 	end
 
 	def groupIsHidingInAnArray?(title)
-		@parsed[title].kind_of?(Array) ? @parsed[title][0] : @parsed[title]
+		@parsed[title].kind_of?(Array) ? true : false
 	end
 
 	def failedTitleMessage(title)
@@ -52,8 +65,7 @@ class Grouping
 
 	def formatsReferenceForColoredLabels
 			message = "Reference for colored labels:\n"
-			message << formatsGroup("labelNames")
-			message << "\n"
+			message << formatsOneGroup("labelNames")
 			return message
 	end
 end

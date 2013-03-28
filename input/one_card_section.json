@@ -7,6 +7,18 @@
 		"green":"",
 		"blue":"Write"
 		},
+	"cards":[
+		{
+		"id":"1111122222",
+		"checkItemStates":[],
+		"closed":false,
+		"name":"This is a foo card",
+		"pos":131071,
+		"shortUrl":"https://trello.com/",
+		"subscribed":false,
+		"url":"https://trello.com/card/"
+		}
+	],
 	"lists":[
 		{
 		"id":"12345",
@@ -23,18 +35,6 @@
 		"idBoard":"99999",
 		"pos":8192,
 		"subscribed":false
-		}
-	],
-	"cards":[
-		{
-		"id":"1111122222",
-		"checkItemStates":[],
-		"closed":false,
-		"name":"This is a foo card",
-		"pos":131071,
-		"shortUrl":"https://trello.com/",
-		"subscribed":false,
-		"url":"https://trello.com/card/"
 		}
 	]
 }

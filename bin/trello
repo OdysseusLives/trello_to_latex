@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+require_relative '../lib/grouping.rb'
+file = open("input/one_card_section.json")
+json = file.read
+parsed = JSON.parse(json)
+
+puts Grouping.new(parsed).formatsReference
+puts Grouping.new(parsed).formatsGroup("labelNames")
+puts Grouping.new(parsed).formatsGroup("cards")

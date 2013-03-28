@@ -5,13 +5,13 @@ describe Grouping do
     @example_card = Grouping.new(JSON.parse(open("input/one_card_section.json").read))
   end
 
-  describe "#formatsReference" do
+  describe "#formatsReferenceForColoredLabels" do
     it "returns a string" do 
-      @example_card.formatsReference.kind_of?(String).should eq(true)      
+      @example_card.formatsReferenceForColoredLabels.kind_of?(String).should eq(true)      
     end
 
     it "returns a string regarding a Reference" do 
-      @example_card.formatsReference.index("Reference").should_not eq(nil)
+      @example_card.formatsReferenceForColoredLabels.index("Reference").should_not eq(nil)
     end
   end
 

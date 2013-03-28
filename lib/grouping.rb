@@ -34,7 +34,7 @@ class Grouping
 		return "   #{qualities_count}. #{key}: #{value}\n"
 	end
 
-	def formatsReference
+	def formatsReferenceForColoredLabels
 			message = "Reference for colored labels:\n"
 			message << formatsGroup("labelNames")
 			return message

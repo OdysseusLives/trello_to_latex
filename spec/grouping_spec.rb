@@ -54,4 +54,9 @@ describe Grouping do
     end
   end
 
+  describe "#groupIsHidingInAnArray?" do 
+    it "determines if a group has an array as a 'key' in a hash" do
+      @example_card.groupIsHidingInAnArray?("cards").should be_true
+    end
+  end
 end

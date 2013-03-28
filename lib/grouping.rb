@@ -9,8 +9,11 @@ class Grouping
   def formatsGroup(title, *desired_qualities)
   	message = "#{title}\n"
   	qualities_count = 1
+
+  	groupIsHidingInAnArray?(title) ? qualities_location = @parsed[title][0] : qualities_location = @parsed[title]
+  	
   	if validTitle?(title)
-	  	@parsed[title].each do |key, value|
+	  	qualities_location.each do |key, value|
 	  		if value!= "" then 
 	  			message << formatsOneQuality(key, value, qualities_count, *desired_qualities)
 	  			qualities_count += 1
@@ -20,6 +23,10 @@ class Grouping
   		message = failedTitleMessage(title)
   	end
   	return message
+	end
+
+	def groupIsHidingInAnArray?(title)
+		@parsed[title].kind_of?(Array) ? true : false
 	end
 
 	def failedTitleMessage(title)
@@ -37,6 +44,7 @@ class Grouping
 	def formatsReferenceForColoredLabels
 			message = "Reference for colored labels:\n"
 			message << formatsGroup("labelNames")
+			message << "\n"
 			return message
 	end
 end

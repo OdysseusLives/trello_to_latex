@@ -6,5 +6,4 @@ parsed = JSON.parse(json)
 trello_summary = Grouping.new(parsed)
 
 puts trello_summary.formatsReference
-puts trello_summary.formatsGroup("labelNames")
 puts trello_summary.formatsGroup("cards")

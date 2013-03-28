@@ -31,14 +31,12 @@ class Grouping
 	end
 
 	def formatsOneQuality(key, value, qualities_count, *desired_qualities)
-		message = ""
-			message = "   #{qualities_count}. #{key}: #{value}\n"
-		return message
+		return "   #{qualities_count}. #{key}: #{value}\n"
 	end
 
 	def formatsReference
 			message = "Reference for colored labels:\n"
-			formatsGroup("labelNames")
+			message << formatsGroup("labelNames")
 			return message
 	end
 end

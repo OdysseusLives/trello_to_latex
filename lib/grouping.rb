@@ -10,14 +10,23 @@ class Grouping
   	message = "#{title}\n"
   	qualities_count = 1
 
-  	groupIsHidingInAnArray?(title) ? qualities_location = @parsed[title][0] : qualities_location = @parsed[title]
+  	qualities_location = groupIsHidingInAnArray?(title)
   	
   	if validTitle?(title)
 	  	qualities_location.each do |key, value|
-	  		if value!= "" then 
-	  			message << formatsOneQuality(key, value, qualities_count, *desired_qualities)
-	  			qualities_count += 1
-	  		end
+	  		if desired_qualities != []
+	  			desired_qualities.each do |desired_key|
+	  				if key == desired_key && value != "" then 
+	  					message << formatsOneQuality(key, value, qualities_count, *desired_qualities) 
+	  					qualities_count += 1 
+	  				end
+	  			end
+	  		else
+		  		if value!= "" then 
+		  			message << formatsOneQuality(key, value, qualities_count, *desired_qualities) 
+		  			qualities_count += 1 
+		  		end
+		  	end
 	  	end
   	else
   		message = failedTitleMessage(title)
@@ -26,7 +35,7 @@ class Grouping
 	end
 
 	def groupIsHidingInAnArray?(title)
-		@parsed[title].kind_of?(Array) ? true : false
+		@parsed[title].kind_of?(Array) ? @parsed[title][0] : @parsed[title]
 	end
 
 	def failedTitleMessage(title)

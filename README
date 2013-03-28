@@ -1,0 +1,10 @@
+Purpose: 
+Extract wanted data from Trello's downloadable JSON file, then make a LaTeX file using groupings of Trello cards
+
+Ruby: 1.9.3
+
+To run tests: 
+	rspec
+	
+To run program: 
+	ruby bin/trello

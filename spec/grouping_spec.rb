@@ -7,7 +7,6 @@ describe Grouping do
       { "name":"Snowflake", "fur":"white", "claws":true} ]}'))
     @pets_single_hash = Grouping.new(JSON.parse('{"pets":{"dog":"Fido"}}'))
     @instruments_multi_hash_card = Grouping.new(JSON.parse('{"instruments":{"fiddle":"strings", "clarinet":"woodwind", "trumpet":"brass"}}'))
-    @instruments_multi_hash_ONLY= JSON.parse('{"instruments":{"fiddle":"strings", "clarinet":"woodwind", "trumpet":"brass"}}')
     @phone_object_card = Grouping.new(JSON.parse('{"phone":true}'))
   end
 
@@ -53,8 +52,6 @@ describe Grouping do
       @example_card.isAHash?("labelNames").should be_true
       @pets_single_hash.isAHash?("pets").should be_true
       @instruments_multi_hash_card.isAHash?("instruments").should be_true
-      puts @instruments_multi_hash_ONLY["instruments"]["fiddle"]
-      puts @instruments_multi_hash_card.parsed["instruments"]["fiddle"]
       @instruments_multi_hash_card.parsed.each { |instrum| 
         @instruments_multi_hash_card.isAHash?(instrum) }.should be_true
     end   

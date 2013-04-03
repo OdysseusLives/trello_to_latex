@@ -55,7 +55,8 @@ describe Grouping do
       @instruments_multi_hash_card.isAHash?("instruments").should be_true
       puts @instruments_multi_hash_ONLY["instruments"]["fiddle"]
       puts @instruments_multi_hash_card.parsed["instruments"]["fiddle"]
-      # @instruments_multi_hash_card.isAHash?("instruments\"][\"fiddle").should be_true
+      @instruments_multi_hash_card.parsed.each { |instrum| 
+        @instruments_multi_hash_card.isAHash?(instrum) }.should be_true
     end   
   end
 

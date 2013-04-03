@@ -28,6 +28,10 @@ describe Grouping do
   describe "#isAKeyValuePair?" do 
     it "is a key-value pair" do 
       @phone_object_card.isAKeyValuePair?(@phone_object_card.parsed).should be_true
+      @pets_single_hash.isAKeyValuePair?(@pets_single_hash.parsed["pets"]).should be_true
+    end
+    it "is not a key-value pair" do 
+      @pets_single_hash.isAKeyValuePair?(@pets_single_hash.parsed).should be_false
     end
   end
 

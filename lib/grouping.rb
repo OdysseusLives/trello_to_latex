@@ -83,4 +83,14 @@ class Grouping
 		@parsed[title].kind_of?(Hash) ? true : false
 	end
 
+	def isAKeyValuePair?(statement)
+		firstArrow = statement.to_s.index("=>")
+		if firstArrow != nil 
+			secondArrow = statement.to_s[firstArrow + 2, statement.to_s.length - 1].index("=>")
+			return secondArrow == nil ? true : false
+		else
+			return false
+		end
+	end
+
 end

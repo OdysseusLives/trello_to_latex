@@ -25,6 +25,12 @@ describe Grouping do
     end  
   end
 
+  describe "#isAKeyValuePair?" do 
+    it "is a key-value pair" do 
+      @phone_object_card.isAKeyValuePair?(@phone_object_card.parsed).should be_true
+    end
+  end
+
     describe "#isAnObject?" do 
     it "is not an object" do 
       @example_card.isAnObject?("labelNames").should be_false
@@ -46,14 +52,22 @@ describe Grouping do
       @example_card.isAHash?("cards").should be_false
       @cats_array_card.isAHash?("cats").should be_false
       @cats_array_card.isAHash?("cats[0]").should be_false
-      @phone_object_card.isAHash?("phone").should be_false
+      @phone_object_card.isAHash?("phone").should be_false #only key and value; not a hash iteself
     end
     it "is a hash" do 
       @example_card.isAHash?("labelNames").should be_true
+
       @pets_single_hash.isAHash?("pets").should be_true
+      @pets_single_hash.parsed.each { |pet|
+        @pets_single_hash.isAHash?(pet) }.should be_true
+      
       @instruments_multi_hash_card.isAHash?("instruments").should be_true
       @instruments_multi_hash_card.parsed.each { |instrum| 
         @instruments_multi_hash_card.isAHash?(instrum) }.should be_true
+
+      @cats_array_card.parsed.each { |cat| 
+        cat.each { |traits|
+          @cats_array_card.isAHash?(traits) } }.should be_true
     end   
   end
 

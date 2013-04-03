@@ -3,6 +3,60 @@ require_relative '../lib/grouping.rb'
 describe Grouping do
   before :each do
     @example_card = Grouping.new(JSON.parse(open("input/one_card_section.json").read))
+    @cats_array_card = Grouping.new(JSON.parse('{"cats":[{ "name":"Muffin", "fur":"tawny", "claws":true },
+      { "name":"Snowflake", "fur":"white", "claws":true} ]}'))
+    @pets_single_hash = Grouping.new(JSON.parse('{"pets":{"dog":"Fido"}}'))
+    @instruments_multi_hash_card = Grouping.new(JSON.parse('{"instruments":{"fiddle":"strings", "clarinet":"woodwind", "trumpet":"brass"}}'))
+    @instruments_multi_hash_ONLY= JSON.parse('{"instruments":{"fiddle":"strings", "clarinet":"woodwind", "trumpet":"brass"}}')
+    @phone_object_card = Grouping.new(JSON.parse('{"phone":true}'))
+  end
+
+  describe "#isAnArray?" do 
+    it "is not an array" do 
+      @example_card.isAnArray?("name").should be_false
+      @example_card.isAnArray?("labelNames").should be_false
+      @cats_array_card.isAnArray?("cats[0]").should be_false
+      @pets_single_hash.isAnArray?("pets").should be_false
+      @instruments_multi_hash_card.isAnArray?("instruments").should be_false
+      @phone_object_card.isAnArray?("phone").should be_false
+    end
+    it "is an array" do 
+      @example_card.isAnArray?("cards").should be_true
+      @cats_array_card.isAnArray?("cats").should be_true
+    end  
+  end
+
+    describe "#isAnObject?" do 
+    it "is not an object" do 
+      @example_card.isAnObject?("labelNames").should be_false
+      @example_card.isAnObject?("cards").should be_false
+      @cats_array_card.isAnObject?("cats").should be_false
+      @pets_single_hash.isAnObject?("pets").should be_false
+      @instruments_multi_hash_card.isAnObject?("instruments").should be_false
+    end
+    it "is an object" do 
+      @example_card.isAnObject?("name").should be_true
+      @phone_object_card.isAnObject?("phone").should be_true
+      @cats_array_card.isAnObject?("cats[0]").should be_true
+    end
+  end
+
+  describe "#isAHash?" do 
+    it "is not a hash" do 
+      @example_card.isAHash?("name").should be_false
+      @example_card.isAHash?("cards").should be_false
+      @cats_array_card.isAHash?("cats").should be_false
+      @cats_array_card.isAHash?("cats[0]").should be_false
+      @phone_object_card.isAHash?("phone").should be_false
+    end
+    it "is a hash" do 
+      @example_card.isAHash?("labelNames").should be_true
+      @pets_single_hash.isAHash?("pets").should be_true
+      @instruments_multi_hash_card.isAHash?("instruments").should be_true
+      puts @instruments_multi_hash_ONLY["instruments"]["fiddle"]
+      puts @instruments_multi_hash_card.parsed["instruments"]["fiddle"]
+      # @instruments_multi_hash_card.isAHash?("instruments\"][\"fiddle").should be_true
+    end   
   end
 
   describe "#formatsReferenceForColoredLabels" do

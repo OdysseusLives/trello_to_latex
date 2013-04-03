@@ -2,6 +2,8 @@ require "rubygems"
 require "json"
 
 class Grouping
+	attr_reader :parsed
+  
   def initialize(parsed_json)
   	@parsed = parsed_json
   end
@@ -68,4 +70,17 @@ class Grouping
 			message << formatsOneGroup("labelNames")
 			return message
 	end
+
+	def isAnArray?(title)
+		@parsed[title].kind_of?(Array) ? true : false
+	end
+
+	def isAnObject?(title)
+		!@parsed[title].kind_of?(Array) && !@parsed[title].kind_of?(Hash) ? true : false
+	end
+
+	def isAHash?(title)
+		@parsed[title].kind_of?(Hash) ? true : false
+	end
+
 end

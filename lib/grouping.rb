@@ -14,19 +14,33 @@ class Grouping
 
   def formatsOneGroup(title, *desired_qualities)
   	message = "#{title}\n"
-
-  	if isAnArray?(title) then
-  		@parsed[title].each do |item|
-  			qualities_location = item
-  			message << formatsOneSubGroup(title, qualities_location, *desired_qualities)
-  		end
-  	else
-  		qualities_location = @parsed[title]
-  		message << formatsOneSubGroup(title, qualities_location, *desired_qualities)
-  	end
+  	message << returnsMessageBody(title, *desired_qualities)
   	message << "\n"
   	return message
   end
+
+  def returnsMessageBody(title, *desired_qualities)
+  	if isAnArray?(title) then
+  		message = loopInArrayToSetupAMessage(title, *desired_qualities)
+  	else
+  		qualities_location = @parsed[title]
+  		message = setupAMessage(title, qualities_location, *desired_qualities)
+  	end
+  	return message
+  end
+
+  def loopInArrayToSetupAMessage(title, *desired_qualities)
+		message = ""
+		@parsed[title].each do |item|
+			qualities_location = item
+			message << setupAMessage(title, qualities_location, *desired_qualities)
+		end
+		return message
+	end
+
+	def setupAMessage(title, qualities_location, *desired_qualities)
+		return formatsOneSubGroup(title, qualities_location, *desired_qualities)
+	end
 
   def formatsOneSubGroup(title, qualities_location, *desired_qualities)
   	message = "" 

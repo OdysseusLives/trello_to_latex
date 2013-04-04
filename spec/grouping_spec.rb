@@ -13,6 +13,8 @@ describe Grouping do
   describe "#returnsInformation" do 
     it "gives data if title is valid" do 
       @cats_array_card.returnsInformation("fur").index("associated").should_not be_nil
+      @example_card.returnsInformation("cards", "name", "url").index("https://").should_not be_nil
+      @example_card.returnsInformation("lists", "name").index("Waiting for").should_not be_nil
     end
     it "gives 'failure' message if title is invalid" do 
       @cats_array_card.returnsInformation("monkey").index("associated").should_not be_nil

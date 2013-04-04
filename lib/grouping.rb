@@ -2,10 +2,16 @@ require "rubygems"
 require "json"
 
 class Grouping
-	attr_reader :parsed
+	attr_reader :parsed, :title
   
   def initialize(parsed_json)
   	@parsed = parsed_json
+  end
+
+  def returnsInformationUsingConfig(line)
+  	@title = line[0]
+  	*desired_qualities = line[1, line.length]
+  	return returnsInformation(@title, *desired_qualities) 
   end
 
   def returnsInformation(title, *desired_qualities) 

@@ -12,12 +12,10 @@ all_configs = []
 
 lines = config_file.split("\n")
 lines.each { |line|
-  field = line.split(", ").inspect
-  field = field.gsub!(/\W/, "") 
-  puts field
-  puts trello_summary.returnsInformation(field)
-  all_configs << line.split(", ")
+  field = line.split(", ")	
+  all_configs << field
+  puts trello_summary.returnsInformationUsingConfig(field)
 }
-puts trello_summary.formatsReferenceForColoredLabels
-puts trello_summary.returnsInformation("cards", "name", "url")
-puts trello_summary.returnsInformation("lists", "name")
+# puts trello_summary.formatsReferenceForColoredLabels
+# puts trello_summary.returnsInformation("cards", "name", "url")
+# puts trello_summary.returnsInformation("lists", "name")

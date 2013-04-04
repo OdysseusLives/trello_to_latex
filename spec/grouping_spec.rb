@@ -12,6 +12,20 @@ describe Grouping do
     @blank_card = Grouping.new(JSON.parse('{}'))
   end
 
+  describe "#returnsInformationUsingConfig(line)" do 
+    it "takes an array" do 
+      @blank_card.returnsInformationUsingConfig(["foo"]).should_not be_nil
+      @cars_object_card.returnsInformationUsingConfig(["mine"]).should_not be_nil
+    end
+    it "parses a title and *desired_qualities from the array" do 
+      @cats_array_card.returnsInformationUsingConfig(["cats", "name", "fur"])
+      @cats_array_card.title.should eq("cats")
+    end
+    it "returns the message from returnsInformation" do 
+      @cats_array_card.returnsInformationUsingConfig(["cats", "name", "fur"]).index("Muffin").should_not be_nil
+    end
+  end
+
   describe "#returnsInformation" do 
     it "returns a message when given a valid title" do 
       @cats_array_card.returnsInformation("fur").index("associated").should_not be_nil

@@ -46,33 +46,19 @@ class Grouping
   	message = ""
   	qualities_count = 1
   	qualities_location.each do |key, value|
-  		message << loopThroughEachQualitiesLocation(title, qualities_location, key, value, qualities_count, *desired_qualities)
-  		qualities_count += adjustQualitiesCount(key, value, *desired_qualities)
+  		if doIOutputAMessage?(key, value, *desired_qualities)
+  			message << formatsOneQuality(key, value, qualities_count, *desired_qualities) 
+  			qualities_count += 1 
+  		end
   	end
   	return message
 	end
 
-	def loopThroughEachQualitiesLocation(title, qualities_location, key, value, qualities_count, *desired_qualities) 
-		message = ""
-		if desired_qualities != []
-			desired_qualities.each do |desired_key|
-				if key == desired_key && value != "" then 
-					message << formatsOneQuality(key, value, qualities_count, *desired_qualities) 
-				end
-			end
-		else
-  		if value!= "" then 
-  			message << formatsOneQuality(key, value, qualities_count, *desired_qualities) 
-  		end
-  	end
-  	return message
-  end
-
-  def adjustQualitiesCount(key, value, *desired_qualities)
+  def doIOutputAMessage?(key, value, *desired_qualities)
   	if value != ""
-  		areThereDesiredQualities?(*desired_qualities) ? (validKey?(key, *desired_qualities) ? 1 : 0 ) : 1
+  		areThereDesiredQualities?(*desired_qualities) ? (validKey?(key, *desired_qualities) ? true : false ) : true
   	else
-  		return 0
+  		return false
   	end
   end
 

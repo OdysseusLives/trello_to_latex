@@ -183,18 +183,18 @@ describe Grouping do
     end
   end
 
-  describe "#adjustQualitiesCount" do 
-    it "is unchanged if there is null value" do 
-      @blank_card.adjustQualitiesCount("color", "").should eq(0)
+  describe "#doIOutputAMessage?" do 
+    it "is false if there is null value" do 
+      @blank_card.doIOutputAMessage?("color", "").should be_false
     end
-    it "is unchanged if desired key is invalid" do 
-      @blank_card.adjustQualitiesCount("color", "", "hummingbirds", "owls", "hawks").should eq(0)
+    it "is false if desired key is invalid" do 
+      @blank_card.doIOutputAMessage?("color", "", "hummingbirds", "owls", "hawks").should be_false
     end
-    it "increases if a value is not empty" do 
-      @blank_card.adjustQualitiesCount("color", "red").should eq(1)
+    it "is true if a value is not empty" do 
+      @blank_card.doIOutputAMessage?("color", "red").should be_true
     end
-    it "increases if value is not empty and desired key is a valid key" do 
-      @blank_card.adjustQualitiesCount("color", "red", "color", "shape", "texture").should eq(1)
+    it "is true if value is not empty and desired key is a valid key" do 
+      @blank_card.doIOutputAMessage?("color", "red", "color", "shape", "texture").should be_true
     end
   end
 end

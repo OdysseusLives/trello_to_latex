@@ -39,29 +39,52 @@ class Grouping
 	end
 
 	def setupMessageBody(title, qualities_location, *desired_qualities)
-		return formatsOneSubGroup(title, qualities_location, *desired_qualities)
+		return setupOneMessageBodySection(title, qualities_location, *desired_qualities)
 	end
 
-  def formatsOneSubGroup(title, qualities_location, *desired_qualities)
-  	message = "" 
+  def setupOneMessageBodySection(title, qualities_location, *desired_qualities)
+  	message = ""
   	qualities_count = 1
   	qualities_location.each do |key, value|
-  		if desired_qualities != []
-  			desired_qualities.each do |desired_key|
-  				if key == desired_key && value != "" then 
-  					message << formatsOneQuality(key, value, qualities_count, *desired_qualities) 
-  					qualities_count += 1 
-  				end
-  			end
-  		else
-	  		if value!= "" then 
-	  			message << formatsOneQuality(key, value, qualities_count, *desired_qualities) 
-	  			qualities_count += 1 
-	  		end
-	  	end
+  		message << loopThroughEachQualitiesLocation(title, qualities_location, key, value, qualities_count, *desired_qualities)
+  		qualities_count += adjustQualitiesCount(key, value, *desired_qualities)
   	end
   	return message
 	end
+
+	def loopThroughEachQualitiesLocation(title, qualities_location, key, value, qualities_count, *desired_qualities) 
+		message = ""
+		if desired_qualities != []
+			desired_qualities.each do |desired_key|
+				if key == desired_key && value != "" then 
+					message << formatsOneQuality(key, value, qualities_count, *desired_qualities) 
+				end
+			end
+		else
+  		if value!= "" then 
+  			message << formatsOneQuality(key, value, qualities_count, *desired_qualities) 
+  		end
+  	end
+  	return message
+  end
+
+  def adjustQualitiesCount(key, value, *desired_qualities)
+  	if value != ""
+  		areThereDesiredQualities?(*desired_qualities) ? (validKey?(key, *desired_qualities) ? 1 : 0 ) : 1
+  	else
+  		return 0
+  	end
+  end
+
+  def areThereDesiredQualities?(*desired_qualities)
+  	return desired_qualities != [] ? true : false
+  end
+
+  def validKey?(key, *desired_qualities)
+  	desired_qualities.each { |desired_key| 
+			return true if desired_key == key }
+		return false
+  end
 
 	def failedTitleMessage(title)
 		return "There are no qualities associated with #{title}"

@@ -8,6 +8,7 @@ describe Grouping do
     @pets_single_hash = Grouping.new(JSON.parse('{"pets":{"dog":"Fido"}}'))
     @instruments_multi_hash_card = Grouping.new(JSON.parse('{"instruments":{"fiddle":"strings", "clarinet":"woodwind", "trumpet":"brass"}}'))
     @phone_object_card = Grouping.new(JSON.parse('{"phone":true}'))
+    @blank_card = Grouping.new(JSON.parse('{}'))
   end
 
   describe "#returnsInformation" do 
@@ -114,6 +115,7 @@ describe Grouping do
   describe "#validTitle?" do 
     it "is true if the title is a quality in the json file" do
       @example_card.validTitle?("labelNames").should be_true
+      @instruments_multi_hash_card.validTitle?("instruments").should be_true
     end
 
     it "is false if the title is a not quality in the json file" do
@@ -166,4 +168,33 @@ describe Grouping do
     end
   end
 
+  describe "#validKey?" do 
+    it "checks if key to a given set of desired qualities is valid" do 
+      @blank_card.validKey?("pencil", "hat", "scarf", "cap").should be_false
+      @blank_card.validKey?("pencil", "pen", "pencil", "quill", "marker").should be_true
+    end
+  end
+
+  describe "#areThereDesiredQualities?" do 
+    it "checks if there are passed desired qualities to look through" do 
+      @blank_card.areThereDesiredQualities?().should be_false
+      @blank_card.areThereDesiredQualities?("book").should be_true
+      @blank_card.areThereDesiredQualities?("postcard", "poster", "pencil").should be_true
+    end
+  end
+
+  describe "#adjustQualitiesCount" do 
+    it "is unchanged if there is null value" do 
+      @blank_card.adjustQualitiesCount("color", "").should eq(0)
+    end
+    it "is unchanged if desired key is invalid" do 
+      @blank_card.adjustQualitiesCount("color", "", "hummingbirds", "owls", "hawks").should eq(0)
+    end
+    it "increases if a value is not empty" do 
+      @blank_card.adjustQualitiesCount("color", "red").should eq(1)
+    end
+    it "increases if value is not empty and desired key is a valid key" do 
+      @blank_card.adjustQualitiesCount("color", "red", "color", "shape", "texture").should eq(1)
+    end
+  end
 end

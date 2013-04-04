@@ -122,16 +122,19 @@ describe Grouping do
   end
 
   describe "#returnsInformation" do 
-    it "returns a string when given a valid title" do 
-      @example_card.returnsInformation("labelNames").kind_of?(String).should be_true
+    it "returns a message when given a valid title" do 
+      @instruments_multi_hash_card.returnsInformation("instruments").index("instruments").should_not be_nil
+      @instruments_multi_hash_card.returnsInformation("instruments").kind_of?(String).should be_true
+      @instruments_multi_hash_card.returnsInformation("instruments").index("fiddle").should_not be_nil
+      @instruments_multi_hash_card.returnsInformation("instruments", "fiddle").index("fiddle").should_not be_nil
+      @instruments_multi_hash_card.returnsInformation("instruments", "fiddle").index("strings").should_not be_nil
+      @instruments_multi_hash_card.returnsInformation("instruments").index("clarinet").should_not be_nil
+      @instruments_multi_hash_card.returnsInformation("instruments").index("brass").should_not be_nil
     end
-
-    it "returns a string when given a bad title" do 
-      @example_card.returnsInformation("foo").kind_of?(String).should be_true
-    end
-
     it "returns an explaination when given a bad title" do 
-      @example_card.returnsInformation("foo").index("associated").should_not be_nil
+      @instruments_multi_hash_card.returnsInformation("foo").should_not be_nil
+      @instruments_multi_hash_card.returnsInformation("foo").kind_of?(String).should be_true
+      @instruments_multi_hash_card.returnsInformation("foo").index("associated").should_not be_nil
     end
   end
 
@@ -147,4 +150,20 @@ describe Grouping do
       @instruments_multi_hash_card.setupWholeMessage("instruments").index("brass").should_not be_nil
     end
   end
+
+  describe "#returnsMessageBody" do 
+    it "accepts for 'title' to have an array" do 
+      @cats_array_card.returnsMessageBody("cats").should_not be_nil
+      @cats_array_card.returnsMessageBody("cats").kind_of?(String).should be_true
+      @cats_array_card.returnsMessageBody("cats").index("Muffin").should_not be_nil
+      @cats_array_card.returnsMessageBody("cats").index("Snowflake").should_not be_nil
+      @cats_array_card.returnsMessageBody("cats", "fur").index("tawny").should_not be_nil
+    end
+    it "accepts for 'title' to have an object/hash" do 
+      @pets_single_hash.returnsMessageBody("pets").should_not be_nil
+      @pets_single_hash.returnsMessageBody("pets").kind_of?(String).should be_true
+      @pets_single_hash.returnsMessageBody("pets").index("Fido").should_not be_nil
+    end
+  end
+
 end

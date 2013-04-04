@@ -8,7 +8,7 @@ class Grouping
   	@parsed = parsed_json
   end
 
-  def returnsInformation(title, *desired_qualities)
+  def returnsInformation(title, *desired_qualities) 
   	return validTitle?(title) ? setupWholeMessage(title, *desired_qualities) : failedTitleMessage(title)
   end
 
@@ -39,7 +39,7 @@ class Grouping
 	end
 
 	def setupMessageBody(title, qualities_location, *desired_qualities)
-		if isAKeyValuePair?(@parsed) # This seems fragile.  Change it soon. 
+		if isAKeyValuePair?(@parsed) # This seems fragile. 
 			return formatsOneKeyValuePair(title)
 		else
 			return setupOneMessageBodySection(title, qualities_location, *desired_qualities)

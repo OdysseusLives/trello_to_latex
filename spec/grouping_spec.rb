@@ -10,6 +10,15 @@ describe Grouping do
     @phone_object_card = Grouping.new(JSON.parse('{"phone":true}'))
   end
 
+  describe "#returnsInformation" do 
+    it "gives data if title is valid" do 
+      @cats_array_card.returnsInformation("fur").index("associated").should_not be_nil
+    end
+    it "gives 'failure' message if title is invalid" do 
+      @cats_array_card.returnsInformation("monkey").index("associated").should_not be_nil
+    end 
+  end
+
   describe "#isAnArray?" do 
     it "is not an array" do 
       @example_card.isAnArray?("name").should be_false
@@ -121,12 +130,6 @@ describe Grouping do
 
     it "returns an explaination when given a bad title" do 
       @example_card.formatsOneGroup("foo").index("associated").should_not be_nil
-    end
-  end
-
-  describe "#groupIsHidingInAnArray?" do 
-    it "determines if a group has an array as a 'key' in a hash" do
-      @example_card.groupIsHidingInAnArray?("cards").should be_true
     end
   end
 end

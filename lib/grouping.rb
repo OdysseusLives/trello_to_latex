@@ -8,10 +8,14 @@ class Grouping
   	@parsed = parsed_json
   end
 
+  def returnsInformation(title, *desired_qualities)
+  	return validTitle?(title) ? formatsOneGroup(title, *desired_qualities) : failedTitleMessage(title)
+  end
+
   def formatsOneGroup(title, *desired_qualities)
   	message = "#{title}\n"
 
-  	if groupIsHidingInAnArray?(title) then
+  	if isAnArray?(title) then
   		@parsed[title].each do |item|
   			qualities_location = item
   			message << formatsOneSubGroup(title, qualities_location, *desired_qualities)
@@ -47,10 +51,6 @@ class Grouping
   		message = failedTitleMessage(title)
   	end
   	return message
-	end
-
-	def groupIsHidingInAnArray?(title)
-		@parsed[title].kind_of?(Array) ? true : false
 	end
 
 	def failedTitleMessage(title)

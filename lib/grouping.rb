@@ -39,7 +39,11 @@ class Grouping
 	end
 
 	def setupMessageBody(title, qualities_location, *desired_qualities)
-		return setupOneMessageBodySection(title, qualities_location, *desired_qualities)
+		if isAKeyValuePair?(@parsed) # This seems fragile.  Change it soon. 
+			return formatsOneKeyValuePair(title)
+		else
+			return setupOneMessageBodySection(title, qualities_location, *desired_qualities)
+		end
 	end
 
   def setupOneMessageBodySection(title, qualities_location, *desired_qualities)
@@ -47,7 +51,7 @@ class Grouping
   	qualities_count = 1
   	qualities_location.each do |key, value|
   		if doIOutputAMessage?(key, value, *desired_qualities)
-  			message << formatsOneQuality(key, value, qualities_count, *desired_qualities) 
+  			message << formatsOneQuality(key, value, qualities_count) 
   			qualities_count += 1 
   		end
   	end
@@ -80,8 +84,12 @@ class Grouping
 		return @parsed[title] != nil ? true : false
 	end
 
-	def formatsOneQuality(key, value, qualities_count, *desired_qualities)
+	def formatsOneQuality(key, value, qualities_count)
 		return "   #{qualities_count}. #{key}: #{value}\n"
+	end
+
+	def formatsOneKeyValuePair(title)
+		return "      #{title}: #{@parsed[title]}\n"
 	end
 
 	def formatsReferenceForColoredLabels

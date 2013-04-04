@@ -8,6 +8,7 @@ describe Grouping do
     @pets_single_hash = Grouping.new(JSON.parse('{"pets":{"dog":"Fido"}}'))
     @instruments_multi_hash_card = Grouping.new(JSON.parse('{"instruments":{"fiddle":"strings", "clarinet":"woodwind", "trumpet":"brass"}}'))
     @phone_object_card = Grouping.new(JSON.parse('{"phone":true}'))
+    @cars_object_card = Grouping.new(JSON.parse('{"mine":{"sedan":true},"yours":{"sedan":false}}'))
     @blank_card = Grouping.new(JSON.parse('{}'))
   end
 
@@ -16,9 +17,13 @@ describe Grouping do
       @cats_array_card.returnsInformation("fur").index("associated").should_not be_nil
       @example_card.returnsInformation("cards", "name", "url").index("https://").should_not be_nil
       @example_card.returnsInformation("lists", "name").index("Waiting for").should_not be_nil
+      @pets_single_hash.returnsInformation("pets").index("Fido").should_not be_nil
+      @instruments_multi_hash_card.returnsInformation("instruments").index("strings").should_not be_nil
+      @phone_object_card.returnsInformation("phone").index("phone").should_not be_nil
     end
     it "gives 'failure' message if title is invalid" do 
       @cats_array_card.returnsInformation("monkey").index("associated").should_not be_nil
+      @blank_card.returnsInformation("boom").index("associated").should_not be_nil
     end 
   end
 

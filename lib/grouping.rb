@@ -9,10 +9,10 @@ class Grouping
   end
 
   def returnsInformation(title, *desired_qualities)
-  	return validTitle?(title) ? formatsOneGroup(title, *desired_qualities) : failedTitleMessage(title)
+  	return validTitle?(title) ? setupWholeMessage(title, *desired_qualities) : failedTitleMessage(title)
   end
 
-  def formatsOneGroup(title, *desired_qualities)
+  def setupWholeMessage(title, *desired_qualities)
   	message = "#{title}\n"
   	message << returnsMessageBody(title, *desired_qualities)
   	message << "\n"
@@ -21,24 +21,24 @@ class Grouping
 
   def returnsMessageBody(title, *desired_qualities)
   	if isAnArray?(title) then
-  		message = loopInArrayToSetupAMessage(title, *desired_qualities)
+  		message = loopInArrayToSetupMessageBody(title, *desired_qualities)
   	else
   		qualities_location = @parsed[title]
-  		message = setupAMessage(title, qualities_location, *desired_qualities)
+  		message = setupMessageBody(title, qualities_location, *desired_qualities)
   	end
   	return message
   end
 
-  def loopInArrayToSetupAMessage(title, *desired_qualities)
+  def loopInArrayToSetupMessageBody(title, *desired_qualities)
 		message = ""
 		@parsed[title].each do |item|
 			qualities_location = item
-			message << setupAMessage(title, qualities_location, *desired_qualities)
+			message << setupMessageBody(title, qualities_location, *desired_qualities)
 		end
 		return message
 	end
 
-	def setupAMessage(title, qualities_location, *desired_qualities)
+	def setupMessageBody(title, qualities_location, *desired_qualities)
 		return formatsOneSubGroup(title, qualities_location, *desired_qualities)
 	end
 
@@ -80,9 +80,9 @@ class Grouping
 	end
 
 	def formatsReferenceForColoredLabels
-			message = "Reference for colored labels:\n"
-			message << formatsOneGroup("labelNames")
-			return message
+		message = "Reference for colored labels:\n"
+		message << setupWholeMessage("labelNames")
+		return message
 	end
 
 	def isAnArray?(title)

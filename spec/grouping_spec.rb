@@ -121,17 +121,30 @@ describe Grouping do
     end
   end
 
-  describe "#setupWholeMessage" do 
+  describe "#returnsInformation" do 
     it "returns a string when given a valid title" do 
-      @example_card.setupWholeMessage("labelNames").kind_of?(String).should be_true
+      @example_card.returnsInformation("labelNames").kind_of?(String).should be_true
     end
 
     it "returns a string when given a bad title" do 
-      @example_card.setupWholeMessage("foo").kind_of?(String).should be_true
+      @example_card.returnsInformation("foo").kind_of?(String).should be_true
     end
 
     it "returns an explaination when given a bad title" do 
-      @example_card.setupWholeMessage("foo").index("associated").should_not be_nil
+      @example_card.returnsInformation("foo").index("associated").should_not be_nil
+    end
+  end
+
+  describe "#setupWholeMessage" do 
+    it "returns the title" do 
+      @instruments_multi_hash_card.setupWholeMessage("instruments", "fiddle").index("instruments").should_not be_nil
+      @instruments_multi_hash_card.setupWholeMessage("instruments").index("instruments").should_not be_nil
+    end
+    it "returns a message body" do 
+      @instruments_multi_hash_card.setupWholeMessage("instruments", "fiddle").index("fiddle").should_not be_nil
+      @instruments_multi_hash_card.setupWholeMessage("instruments", "fiddle").index("strings").should_not be_nil
+      @instruments_multi_hash_card.setupWholeMessage("instruments").index("clarinet").should_not be_nil
+      @instruments_multi_hash_card.setupWholeMessage("instruments").index("brass").should_not be_nil
     end
   end
 end

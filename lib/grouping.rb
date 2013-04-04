@@ -45,24 +45,20 @@ class Grouping
   def formatsOneSubGroup(title, qualities_location, *desired_qualities)
   	message = "" 
   	qualities_count = 1
-  	if validTitle?(title)
-	  	qualities_location.each do |key, value|
-	  		if desired_qualities != []
-	  			desired_qualities.each do |desired_key|
-	  				if key == desired_key && value != "" then 
-	  					message << formatsOneQuality(key, value, qualities_count, *desired_qualities) 
-	  					qualities_count += 1 
-	  				end
-	  			end
-	  		else
-		  		if value!= "" then 
-		  			message << formatsOneQuality(key, value, qualities_count, *desired_qualities) 
-		  			qualities_count += 1 
-		  		end
-		  	end
+  	qualities_location.each do |key, value|
+  		if desired_qualities != []
+  			desired_qualities.each do |desired_key|
+  				if key == desired_key && value != "" then 
+  					message << formatsOneQuality(key, value, qualities_count, *desired_qualities) 
+  					qualities_count += 1 
+  				end
+  			end
+  		else
+	  		if value!= "" then 
+	  			message << formatsOneQuality(key, value, qualities_count, *desired_qualities) 
+	  			qualities_count += 1 
+	  		end
 	  	end
-  	else
-  		message = failedTitleMessage(title)
   	end
   	return message
 	end

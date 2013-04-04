@@ -10,6 +10,11 @@ describe Grouping do
     @phone_object_card = Grouping.new(JSON.parse('{"phone":true}'))
     @cars_object_card = Grouping.new(JSON.parse('{"mine":{"sedan":true},"yours":{"sedan":false}}'))
     @blank_card = Grouping.new(JSON.parse('{}'))
+    @school_classes_card = Grouping.new(JSON.parse('{"history":{"US":true, "World":true, "Ancient":true}, 
+      "math":{"Algebra":true, "Geometry":true, "Calculus":true}, 
+      "language":"French", 
+      "English":{"Language":true, "Literature":true}, 
+      "sceince":{"Biology":true, "Chemistry":true, "Physics":true}}'))
   end
 
   describe "#returnsInformationUsingConfig(line)" do 
@@ -229,11 +234,11 @@ describe Grouping do
 
   describe "#isAKeyValuePair?" do 
     it "is a key-value pair" do 
-      @phone_object_card.isAKeyValuePair?(@phone_object_card.parsed).should be_true
-      @pets_single_hash.isAKeyValuePair?(@pets_single_hash.parsed["pets"]).should be_true
+      @phone_object_card.isAKeyValuePair?("phone").should be_true
+      @school_classes_card.isAKeyValuePair?("language").should be_true
     end
     it "is not a key-value pair" do 
-      @pets_single_hash.isAKeyValuePair?(@pets_single_hash.parsed).should be_false
+      @pets_single_hash.isAKeyValuePair?("pets").should be_false
     end
   end
 

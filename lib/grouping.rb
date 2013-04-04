@@ -45,7 +45,7 @@ class Grouping
 	end
 
 	def setupMessageBody(title, qualities_location, *desired_qualities)
-		if isAKeyValuePair?(@parsed) # This seems fragile. 
+		if isAKeyValuePair?(title) # This seems fragile. 
 			return formatsOneKeyValuePair(title)
 		else
 			return setupOneMessageBodySection(title, qualities_location, *desired_qualities)
@@ -116,13 +116,21 @@ class Grouping
 		@parsed[title].kind_of?(Hash) ? true : false
 	end
 
-	def isAKeyValuePair?(statement)
-		firstArrow = statement.to_s.index("=>")
-		if firstArrow != nil 
-			secondArrow = statement.to_s[firstArrow + 2, statement.to_s.length - 1].index("=>")
-			return secondArrow == nil ? true : false
+	def isAKeyValuePair?(title)
+		container = @parsed.to_s
+		puts "C: #{container}" if title == "language"
+		# if isLastItemInContainer?(title, container)
+		# 	regular string search
+		# else
+		# 	search until next item in container, be it ', "' or '=>'
+		# end
+		begin_search = container.index(title) + title.length
+		firstArrowAfterTitle = container[begin_search, container.length].index("=>{")
+		if firstArrowAfterTitle != nil 
+			secondArrowAfterTitle = container[firstArrowAfterTitle + 2, container.length - 1].index("=>")
+			return secondArrowAfterTitle == nil ? true : false
 		else
-			return false
+			return true
 		end
 	end
 

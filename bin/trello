@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require_relative '../lib/grouping.rb'
 
-file = open("input/one_card_section.json")
+file = open("input/one_card.json")
 json = file.read
 parsed = JSON.parse(json)
 trello_summary = Grouping.new(parsed)
@@ -10,12 +10,14 @@ trello_summary = Grouping.new(parsed)
 config_file = File.read('config/trello_fields.txt')
 all_configs = []
 
+puts trello_summary.formatsReferenceForColoredLabels
+
 lines = config_file.split("\n")
 lines.each { |line|
   field = line.split(", ")	
   all_configs << field
   puts trello_summary.returnsInformationUsingConfig(field)
 }
-# puts trello_summary.formatsReferenceForColoredLabels
+
 # puts trello_summary.returnsInformation("cards", "name", "url")
 # puts trello_summary.returnsInformation("lists", "name")

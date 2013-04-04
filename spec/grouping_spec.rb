@@ -8,13 +8,14 @@ describe Grouping do
     @pets_single_hash = Grouping.new(JSON.parse('{"pets":{"dog":"Fido"}}'))
     @instruments_multi_hash_card = Grouping.new(JSON.parse('{"instruments":{"fiddle":"strings", "clarinet":"woodwind", "trumpet":"brass"}}'))
     @phone_object_card = Grouping.new(JSON.parse('{"phone":true}'))
-    @cars_object_card = Grouping.new(JSON.parse('{"mine":{"sedan":true},"yours":{"sedan":false}}'))
+    @cars = JSON.parse('{"mine":{"sedan":true},"yours":{"sedan":false}}')
+    @cars_object_card = Grouping.new(@cars)
     @blank_card = Grouping.new(JSON.parse('{}'))
     @school_classes_card = Grouping.new(JSON.parse('{"history":{"US":true, "World":true, "Ancient":true}, 
       "math":{"Algebra":true, "Geometry":true, "Calculus":true}, 
       "language":"French", 
       "English":{"Language":true, "Literature":true}, 
-      "sceince":{"Biology":true, "Chemistry":true, "Physics":true}}'))
+      "science":{"Biology":true, "Chemistry":true, "Physics":true}}'))
   end
 
   describe "#returnsInformationUsingConfig(line)" do 
@@ -239,6 +240,27 @@ describe Grouping do
     end
     it "is not a key-value pair" do 
       @pets_single_hash.isAKeyValuePair?("pets").should be_false
+    end
+  end
+
+  describe "#isLastItemInContainer?" do 
+    it "takes a title and string version of @parsed" do 
+      @school_classes_card.isLastItemInContainer?("language", @school_classes_card.parsed.to_s).should_not be_nil
+    end
+    it "is false when more items are in the container" do 
+      @school_classes_card.isLastItemInContainer?("language", @school_classes_card.parsed.to_s).should be_false
+    end
+    it "it true when there are no more items in the container" do 
+      @school_classes_card.isLastItemInContainer?("Physics", @school_classes_card.parsed.to_s).should be_true
+    end
+  end
+
+  describe "#startPointAfterTitle" do
+    it "returns an integer when given a title and a string container" do 
+      @cars_object_card.startPointAfterTitle("mine", @cars.to_s).kind_of?(Integer).should be_true
+    end
+    it "returns an string index location of where the 'title' has been found + its length + length of '\" ,'" do 
+      @cars_object_card.startPointAfterTitle("mine", @cars.to_s).should eq(9)
     end
   end
 

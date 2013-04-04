@@ -134,4 +134,18 @@ class Grouping
 		end
 	end
 
+	def isLastItemInContainer?(title, container)
+		start_point = startPointAfterTitle(title, container)
+		end_point = container.length
+		puts "#{title} SP: #{start_point}, EP: #{end_point}"
+		hasAComma = container[start_point..end_point].index(",") ? true : false
+		hasAnArrow = container[start_point..end_point].index("=>") ? true : false
+		puts "#{title} HC?: #{hasAComma}, HA?: #{hasAnArrow}"
+		return hasAComma || hasAnArrow ? false : true 
+	end
+
+	def startPointAfterTitle(title, container)
+		container.index(title) + title.length + "\"=>".length
+	end
+
 end

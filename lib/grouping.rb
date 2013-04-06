@@ -133,9 +133,7 @@ class Grouping
 			if end_point < start_point then
 				return true 
 			else
-				if %r{\w}.match(container[start_point..end_points[counter]]) == nil then 
-					return true
-				end
+				return true if %r{\w}.match(container[start_point..end_points[counter]]) == nil 
 			end
 			counter += 1
 		}
@@ -144,9 +142,7 @@ class Grouping
 
 	def searchForFeature(title, container, start_point, features, end_points, counter) 
 		features.each { |feature| 
-			# puts counter 
 			end_points[counter] = updateEndPoint(container, start_point, end_points[counter - 1], feature)
-			# puts "Here: #{container[start_point..end_points[counter]]}.  SP: #{start_point}, EP: #{end_points[counter]}, f: #{feature}" #if title == "language"
 			counter += 1
 		} 
 		end_points

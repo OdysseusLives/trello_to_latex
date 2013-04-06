@@ -1,3 +1,6 @@
 name
+pinned
+shortUrl
+labelNames
 cards, name, url
 lists, name

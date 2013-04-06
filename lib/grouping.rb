@@ -118,34 +118,59 @@ class Grouping
 
 	def isAKeyValuePair?(title)
 		container = @parsed.to_s
-		puts "C: #{container}" if title == "language"
-		# if isLastItemInContainer?(title, container)
-		# 	regular string search
-		# else
-		# 	search until next item in container, be it ', "' or '=>'
-		# end
-		begin_search = container.index(title) + title.length
-		firstArrowAfterTitle = container[begin_search, container.length].index("=>{")
-		if firstArrowAfterTitle != nil 
-			secondArrowAfterTitle = container[firstArrowAfterTitle + 2, container.length - 1].index("=>")
-			return secondArrowAfterTitle == nil ? true : false
-		else
-			return true
-		end
+		start_point = startPointAfterTitle(title, container)
+		features = ["=>", ",", "{"]
+		end_points = []
+		end_points[0] = container.length
+		counter = 1
+		end_points = searchForFeature(title, container, start_point, features, end_points, counter) 
+		return hasNoWords?(container, start_point, end_points) ? false : true
 	end
 
-	def isLastItemInContainer?(title, container)
-		start_point = startPointAfterTitle(title, container)
-		end_point = container.length
-		puts "#{title} SP: #{start_point}, EP: #{end_point}"
-		hasAComma = container[start_point..end_point].index(",") ? true : false
-		hasAnArrow = container[start_point..end_point].index("=>") ? true : false
-		puts "#{title} HC?: #{hasAComma}, HA?: #{hasAnArrow}"
-		return hasAComma || hasAnArrow ? false : true 
+	def hasNoWords?(container, start_point, end_points)
+		counter = 0
+		end_points.each { |end_point| 
+			if end_point < start_point then
+				return true 
+			else
+				if %r{\w}.match(container[start_point..end_points[counter]]) == nil then 
+					return true
+				end
+			end
+			counter += 1
+		}
+		return false
+	end
+
+	def searchForFeature(title, container, start_point, features, end_points, counter) 
+		features.each { |feature| 
+			# puts counter 
+			end_points[counter] = updateEndPoint(container, start_point, end_points[counter - 1], feature)
+			# puts "Here: #{container[start_point..end_points[counter]]}.  SP: #{start_point}, EP: #{end_points[counter]}, f: #{feature}" #if title == "language"
+			counter += 1
+		} 
+		end_points
+	end
+
+	def hasAFeature?(container, start_point, end_point, feature)
+		container[start_point..end_point].index(feature) != nil ? true : false
+	end
+
+	def hereIsThisFeature(container, start_point, end_point, feature)
+		return container[start_point..end_point].index(feature) != nil ? container[start_point..end_point].index(feature) - 1 : nil
 	end
 
 	def startPointAfterTitle(title, container)
-		container.index(title) + title.length + "\"=>".length
+		container.index(title) + title.length + "\"=>".length # Frail.  There will be issues when title matches > 1 item.
+	end
+
+	def updateEndPoint(container, start_point, end_point, feature)
+		add_to_start_point = 0 
+		if hasAFeature?(container, start_point, end_point, feature) == true then 
+			add_to_start_point = hereIsThisFeature(container, start_point, end_point, feature) 
+			end_point = start_point + add_to_start_point
+		end
+		return end_point
 	end
 
 end

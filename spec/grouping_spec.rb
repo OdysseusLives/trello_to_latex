@@ -237,21 +237,65 @@ describe Grouping do
     it "is a key-value pair" do 
       @phone_object_card.isAKeyValuePair?("phone").should be_true
       @school_classes_card.isAKeyValuePair?("language").should be_true
+      @school_classes_card.isAKeyValuePair?("Physics").should be_true
     end
     it "is not a key-value pair" do 
       @pets_single_hash.isAKeyValuePair?("pets").should be_false
     end
   end
 
-  describe "#isLastItemInContainer?" do 
-    it "takes a title and string version of @parsed" do 
-      @school_classes_card.isLastItemInContainer?("language", @school_classes_card.parsed.to_s).should_not be_nil
+  describe "searchForFeature" do 
+    it "returns array of indecies of end points based on where features are found" do 
+      title = "sedan"
+      container = @cars.to_s
+      start_point = @cars_object_card.startPointAfterTitle(title, container)
+      features = ["=>", ",", "{"]
+      end_points = []
+      end_points[0] = container.length
+      counter = 1
+      @cars_object_card.searchForFeature(title, container, start_point, features, end_points, counter).should eq([52, 32, 23, 23]) 
     end
-    it "is false when more items are in the container" do 
-      @school_classes_card.isLastItemInContainer?("language", @school_classes_card.parsed.to_s).should be_false
+  end
+
+  describe "#hasNoWords?" do 
+    it "looks for words with a regex" do 
+      title = "sedan"
+      container = @cars.to_s
+      start_point = @cars_object_card.startPointAfterTitle(title, container)
+      end_points = [52, 32, 23, 23]
+      @cars_object_card.hasNoWords?(container, start_point, end_points).should be_false
     end
-    it "it true when there are no more items in the container" do 
-      @school_classes_card.isLastItemInContainer?("Physics", @school_classes_card.parsed.to_s).should be_true
+    it "looks for words with a regex" do 
+      title = "pets"
+      container = JSON.parse('{"pets":{"dog":"Fido"}}').to_s
+      start_point = @blank_card.startPointAfterTitle(title, container)
+      features = ["=>", ",", "{"]
+      end_points = []
+      end_points[0] = container.length
+      counter = 1
+      end_points = @blank_card.searchForFeature(title, container, start_point, features, end_points, counter)
+      @blank_card.hasNoWords?(container, start_point, end_points).should be_true
+    end
+
+  end
+
+  describe "#hasAFeature?" do
+    it "determines if there is an arrow in the given string" do 
+      container = @cars.to_s
+      @blank_card.hasAFeature?(container, 0, container.length, "=>").should be_true
+      @blank_card.hasAFeature?(container, container.length - 2, container.length, "=>").should be_false
+      @blank_card.hasAFeature?(container, 0, container.length, ",").should be_true
+      @blank_card.hasAFeature?(container, container.length - 2, container.length, ",").should be_false
+    end
+  end
+
+  describe "#hereIsThisFeature" do
+    it "determines if there is an arrow in the given string" do 
+      container = @cars.to_s
+      @blank_card.hereIsThisFeature(container, 0, container.length, "=>").should eq(6)
+      @blank_card.hereIsThisFeature(container, container.length - 2, container.length, "=>").should be_nil
+      @blank_card.hereIsThisFeature(container, 0, container.length, ",").should eq(23)
+      @blank_card.hereIsThisFeature(container, container.length - 2, container.length, ",").should be_nil
     end
   end
 
@@ -261,6 +305,18 @@ describe Grouping do
     end
     it "returns an string index location of where the 'title' has been found + its length + length of '\" ,'" do 
       @cars_object_card.startPointAfterTitle("mine", @cars.to_s).should eq(9)
+    end
+  end
+
+  describe "#updateEndPoint" do 
+    it "looks for commas and =>'s; if none, returns old endpoint" do 
+      container = @cars.to_s
+      @cars_object_card.updateEndPoint(container, container.length - 2, container.length, "=>").should eq(container.length)
+      @cars_object_card.updateEndPoint(container, container.length - 2, container.length, ",").should eq(container.length)
+    end 
+    it "looks for commas and =>'s; if some, returns updated endpoint to not-include them" do 
+      container = @cars.to_s
+      @cars_object_card.updateEndPoint(container, 0, container.length, "=>").should eq(6)
     end
   end
 

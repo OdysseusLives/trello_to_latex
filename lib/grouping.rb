@@ -118,7 +118,7 @@ class Grouping
 
 	def isAKeyValuePair?(title)
 		container = @parsed.to_s
-		start_point = startPointAfterTitle(title, container)
+		start_point = startPointAfterTitle(title, container, 0)
 		features = ["=>", ",", "{"]
 		end_points = []
 		end_points[0] = container.length
@@ -156,8 +156,28 @@ class Grouping
 		return container[start_point..end_point].index(feature) != nil ? container[start_point..end_point].index(feature) - 1 : nil
 	end
 
-	def startPointAfterTitle(title, container)
-		container.index(title) + title.length + "\"=>".length # Frail.  There will be issues when title matches > 1 item.
+	def startPointAfterTitle(title, container, start_point)
+		start_point = findTitle(title, container, start_point)
+		if isTitleATitleAndNotAnAttribute?(title, container, start_point)
+			return start_point + title.length + "\"=>".length 
+		else
+			startPointAfterTitle(title, container, start_point + title.length + "\"=>".length )
+		end
+	end
+
+	def findTitle(title, container, start_of_title)
+		container[start_of_title..container.length].index(title) + start_of_title
+	end
+
+	def isTitleATitleAndNotAnAttribute?(title, container, start_point)
+		if container[start_point - 1] == "\"" then 
+			if container[start_point + title.length] == "\"" then 
+				if container[start_point - 3..start_point -2] != "=>" then 
+					return true
+				end
+			end
+		end
+		return false
 	end
 
 	def updateEndPoint(container, start_point, end_point, feature)

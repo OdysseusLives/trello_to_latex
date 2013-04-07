@@ -5,7 +5,8 @@ describe Grouping do
     @example_card = Grouping.new(JSON.parse(open("input/one_card_section.json").read))
     @cats_array_card = Grouping.new(JSON.parse('{"cats":[{ "name":"Muffin", "fur":"tawny", "claws":true },
       { "name":"Snowflake", "fur":"white", "claws":true} ]}'))
-    @pets_single_hash = Grouping.new(JSON.parse('{"pets":{"dog":"Fido"}}'))
+    @dogs = JSON.parse('{"pets":{"dog":"Fido"}}')
+    @pets_single_hash = Grouping.new(@dogs)
     @instruments_multi_hash_card = Grouping.new(JSON.parse('{"instruments":{"fiddle":"strings", "clarinet":"woodwind", "trumpet":"brass"}}'))
     @phone_object_card = Grouping.new(JSON.parse('{"phone":true}'))
     @cars = JSON.parse('{"mine":{"sedan":true},"yours":{"sedan":false}}')
@@ -16,7 +17,7 @@ describe Grouping do
       "language":"French", 
       "English":{"Language":true, "Literature":true}, 
       "science":{"Biology":true, "Chemistry":true, "Physics":true}}'))
-    @bird = JSON.parse('{"name":"Birdie","type":"bird", "color":{"tail":"red", "wings":"striped", "body":"black"},
+    @bird = JSON.parse('{"name":"birdie", "bird":"native species", "type":"bird", "color":{"tail":"red", "wings":"striped", "body":"black"},
       "id":"id12345","notes":"his height is 4.5cm and weight is 1oz","height":"6inches","weight":"1/2 lb"}')
     @bird_card = Grouping.new(@bird)
   end
@@ -226,7 +227,7 @@ describe Grouping do
       @example_card.isAHash?("cards").should be_false
       @cats_array_card.isAHash?("cats").should be_false
       @cats_array_card.isAHash?("cats[0]").should be_false
-      @phone_object_card.isAHash?("phone").should be_false #only key and value; not a hash iteself
+      @phone_object_card.isAHash?("phone").should be_false 
     end
     it "is a hash" do 
       @example_card.isAHash?("labelNames").should be_true
@@ -260,7 +261,7 @@ describe Grouping do
     it "returns array of indecies of end points based on where features are found" do 
       title = "sedan"
       container = @cars.to_s
-      start_point = @cars_object_card.startPointAfterTitle(title, container)
+      start_point = @cars_object_card.startPointAfterTitle(title, container, 0)
       features = ["=>", ",", "{"]
       end_points = []
       end_points[0] = container.length
@@ -273,14 +274,14 @@ describe Grouping do
     it "looks for words with a regex" do 
       title = "sedan"
       container = @cars.to_s
-      start_point = @cars_object_card.startPointAfterTitle(title, container)
+      start_point = @cars_object_card.startPointAfterTitle(title, container, 0)
       end_points = [52, 32, 23, 23]
       @cars_object_card.hasNoWords?(container, start_point, end_points).should be_false
     end
     it "looks for words with a regex, part2" do 
       title = "pets"
       container = JSON.parse('{"pets":{"dog":"Fido"}}').to_s
-      start_point = @blank_card.startPointAfterTitle(title, container)
+      start_point = @blank_card.startPointAfterTitle(title, container, 0)
       features = ["=>", ",", "{"]
       end_points = []
       end_points[0] = container.length
@@ -312,12 +313,46 @@ describe Grouping do
   end
 
   describe "#startPointAfterTitle" do
+     it "returns an string index location of where the 'title' has been found + its length + length of '\" ,'" do  
+      container = @cars.to_s
+      @cars_object_card.startPointAfterTitle("mine", container, 0).should eq(9)
+    end
+    it "knows what 'title' I'm looking for" do 
+      # For reference: @bird: {"name"=>"birdie", "bird"=>"native species", "type"=>"bird", "color"=>{"tail"=>"
+      # red", "wings"=>"striped", "body"=>"black"}, "id"=>"id12345", "notes"=>"his heigh
+      # t is 4.5cm and weight is 1oz", "height"=>"6inches", "weight"=>"1/2 lb"}
+      @bird_card.startPointAfterTitle("bird", @bird.to_s, 0).should eq(27)
+      @bird_card.startPointAfterTitle("bird", @bird.to_s, 0).should_not eq(17)
+      numbers = JSON.parse('{"2":"7","1":"6","0":"4","8":"2","6":"0"}') # Counted out so each num is the singles-digit
+      numbers_card = Grouping.new(numbers)
+      numbers_card.startPointAfterTitle("6", numbers.to_s, 0).should eq(46) # And not eq(that first 6)
+    end
+  end
+
+  describe "#findTitle" do
     it "returns an integer when given a title and a string container" do 
-      @cars_object_card.startPointAfterTitle("mine", @cars.to_s).kind_of?(Integer).should be_true
+      @cars_object_card.findTitle("mine", @cars.to_s, 0).kind_of?(Integer).should be_true
     end
-    it "returns an string index location of where the 'title' has been found + its length + length of '\" ,'" do 
-      @cars_object_card.startPointAfterTitle("mine", @cars.to_s).should eq(9)
+    it "returns an string index location of where the 'title' has been found" do 
+      @cars_object_card.findTitle("mine", @cars.to_s, 0).should eq(2)
+      @pets_single_hash.findTitle("dog", @dogs.to_s, 0).should eq(11)
+      @bird_card.findTitle("bird", @bird.to_s, 0).should eq(10)
+      @cars_object_card.findTitle("mine", @cars.to_s, 0).should eq(2)
     end
+  end
+
+  describe "#isTitleATitleAndNotAnAttribute?" do 
+    it "determines if the first instance of the string of 'title' is in fact the one I want" do 
+      title = "bird"
+      container = @bird.to_s
+      @bird_card.isTitleATitleAndNotAnAttribute?(title, container, 10).should be_false
+      container.index("bird").should eq(10)
+      @bird_card.isTitleATitleAndNotAnAttribute?(title, container, 20).should be_true
+      container.index("bird", 20).should eq(20)
+      @bird_card.isTitleATitleAndNotAnAttribute?(title, container, 54).should be_false
+      container.index("bird", 54).should eq(54)
+      @cars_object_card.isTitleATitleAndNotAnAttribute?("mine", @cars.to_s, 2).should be_true
+    end 
   end
 
   describe "#updateEndPoint" do 

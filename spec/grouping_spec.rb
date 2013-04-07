@@ -16,6 +16,9 @@ describe Grouping do
       "language":"French", 
       "English":{"Language":true, "Literature":true}, 
       "science":{"Biology":true, "Chemistry":true, "Physics":true}}'))
+    @bird = JSON.parse('{"name":"Birdie","type":"bird", "color":{"tail":"red", "wings":"striped", "body":"black"},
+      "id":"id12345","notes":"his height is 4.5cm and weight is 1oz","height":"6inches","weight":"1/2 lb"}')
+    @bird_card = Grouping.new(@bird)
   end
 
   describe "#returnsInformationUsingConfig(line)" do 
@@ -73,14 +76,10 @@ describe Grouping do
   end
 
   describe "#returnsMessageBody" do 
-    it "accepts for 'title' to have an array" do 
-      @cats_array_card.returnsMessageBody("cats").should_not be_nil
-      @cats_array_card.returnsMessageBody("cats").kind_of?(String).should be_true
-      @cats_array_card.returnsMessageBody("cats").index("Muffin").should_not be_nil
-      @cats_array_card.returnsMessageBody("cats").index("Snowflake").should_not be_nil
-      @cats_array_card.returnsMessageBody("cats", "fur").index("tawny").should_not be_nil
+    it "calls loopInArrayToSetupMessageBody if title refers to an array" do
+      @cats_array_card.loopInArrayToSetupMessageBody("cats", "fur").index("tawny").should_not be_nil
     end
-    it "accepts for 'title' to have an object/hash" do 
+    it "calls setupMessageBody if title refers to a object/hash" do 
       @pets_single_hash.returnsMessageBody("pets").should_not be_nil
       @pets_single_hash.returnsMessageBody("pets").kind_of?(String).should be_true
       @pets_single_hash.returnsMessageBody("pets").index("Fido").should_not be_nil
@@ -88,18 +87,27 @@ describe Grouping do
   end
 
   describe "#loopInArrayToSetupMessageBody" do 
-    it "needs a test" do 
+    it "takes each 'value' for the main key and loops to create the message body - used for arrays" do 
+      @cats_array_card.loopInArrayToSetupMessageBody("cats").should_not be_nil
+      @cats_array_card.loopInArrayToSetupMessageBody("cats").kind_of?(String).should be_true
+      @cats_array_card.loopInArrayToSetupMessageBody("cats").index("Muffin").should_not be_nil
+      @cats_array_card.loopInArrayToSetupMessageBody("cats").index("Snowflake").should_not be_nil
+      @cats_array_card.loopInArrayToSetupMessageBody("cats", "fur").index("tawny").should_not be_nil
     end 
   end
 
   describe "#setupMessageBody" do 
-    it "needs a test" do 
+    it "catches key-value pairs and returns message" do 
     end 
+    it "catches non-key-value pairs and returns message" do
+    end
   end
 
   describe "#setupOneMessageBodySection" do 
-    it "needs a test" do 
+    it "does not output a message if doIOutputAMessage is false" do 
     end 
+    it "creates all messages for the bdy section for all that make doIOutputAMessage evaluate to true" do 
+    end
   end
 
   describe "#doIOutputAMessage?" do 
@@ -134,9 +142,9 @@ describe Grouping do
 
   describe "#failedTitleMessage" do 
     it "returns failed message" do 
-      @instruments_multi_hash_card.returnsInformation("foo").should_not be_nil
-      @instruments_multi_hash_card.returnsInformation("foo").kind_of?(String).should be_true
-      @instruments_multi_hash_card.returnsInformation("foo").index("associated").should_not be_nil
+      @instruments_multi_hash_card.failedTitleMessage("foo").should_not be_nil
+      @instruments_multi_hash_card.failedTitleMessage("foo").kind_of?(String).should be_true
+      @instruments_multi_hash_card.failedTitleMessage("foo").index("associated").should_not be_nil
     end 
   end
 
@@ -165,8 +173,12 @@ describe Grouping do
   end
 
   describe "#formatsOneKeyValuePair" do 
-    it "needs a test" do 
+    it "has title in the message" do 
+      @phone_object_card.formatsOneKeyValuePair("phone").index("phone").should_not be_nil
     end 
+    it "has the value in the message" do 
+      @phone_object_card.formatsOneKeyValuePair("phone").index("true").should_not be_nil
+    end
   end
 
   describe "#formatsReferenceForColoredLabels" do
@@ -265,7 +277,7 @@ describe Grouping do
       end_points = [52, 32, 23, 23]
       @cars_object_card.hasNoWords?(container, start_point, end_points).should be_false
     end
-    it "looks for words with a regex" do 
+    it "looks for words with a regex, part2" do 
       title = "pets"
       container = JSON.parse('{"pets":{"dog":"Fido"}}').to_s
       start_point = @blank_card.startPointAfterTitle(title, container)
@@ -309,13 +321,10 @@ describe Grouping do
   end
 
   describe "#updateEndPoint" do 
-    it "looks for commas and =>'s; if none, returns old endpoint" do 
+    it "looks for given features, returns old endpoint" do 
       container = @cars.to_s
       @cars_object_card.updateEndPoint(container, container.length - 2, container.length, "=>").should eq(container.length)
       @cars_object_card.updateEndPoint(container, container.length - 2, container.length, ",").should eq(container.length)
-    end 
-    it "looks for commas and =>'s; if some, returns updated endpoint to not-include them" do 
-      container = @cars.to_s
       @cars_object_card.updateEndPoint(container, 0, container.length, "=>").should eq(6)
     end
   end

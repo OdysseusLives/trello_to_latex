@@ -8,11 +8,9 @@ trello_summary = Grouping.new(parsed)
 
 
 config_file = File.read('config/trello_fields.txt')
-all_configs = []
-
 lines = config_file.split("\n")
-lines.each { |line|
+
+puts lines.map { |line|
   field = line.split(", ")	
-  all_configs << field
-  puts trello_summary.returnsInformationUsingConfig(field)
+  trello_summary.returnsInformationUsingConfig(field)
 }

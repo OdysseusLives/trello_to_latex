@@ -42,15 +42,17 @@ describe Grouping do
       @example_card.returnsInformation("cards", "name", "url").index("https://").should_not be_nil
       @example_card.returnsInformation("lists", "name").index("Waiting for").should_not be_nil
       @pets_single_hash.returnsInformation("pets").index("Fido").should_not be_nil
-      @instruments_multi_hash_card.returnsInformation("instruments").index("strings").should_not be_nil
+      
+      instruments = @instruments_multi_hash_card.returnsInformation("instruments")
+      instruments.index("strings").should_not be_nil
       @phone_object_card.returnsInformation("phone").index("phone").should_not be_nil
-      @instruments_multi_hash_card.returnsInformation("instruments").index("instruments").should_not be_nil
-      @instruments_multi_hash_card.returnsInformation("instruments").kind_of?(String).should be_true
-      @instruments_multi_hash_card.returnsInformation("instruments").index("fiddle").should_not be_nil
+      instruments.index("instruments").should_not be_nil
+      instruments.kind_of?(String).should be_true
+      instruments.index("fiddle").should_not be_nil
       @instruments_multi_hash_card.returnsInformation("instruments", "fiddle").index("fiddle").should_not be_nil
       @instruments_multi_hash_card.returnsInformation("instruments", "fiddle").index("strings").should_not be_nil
-      @instruments_multi_hash_card.returnsInformation("instruments").index("clarinet").should_not be_nil
-      @instruments_multi_hash_card.returnsInformation("instruments").index("brass").should_not be_nil
+      instruments.index("clarinet").should_not be_nil
+      instruments.index("brass").should_not be_nil
       @cars_object_card.returnsInformation("yours").index("yours").should_not be_nil
       @cars_object_card.returnsInformation("yours").index("false").should_not be_nil
     end

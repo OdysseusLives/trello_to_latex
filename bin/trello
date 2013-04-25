@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 require_relative '../lib/grouping.rb'
+require 'erb'
 
 file = open("input/one_card.json")
 json = file.read
@@ -20,9 +21,8 @@ lines.each { |line|
 tex_file = File.read('config/basic_tex_file.tex')
 new_file = File.new('output/new_file.tex', 'w+')  # "w+" Read-write, truncates existing file to zero length
 tex_file.split("\n").each { |tex_line| 
-	new_file.puts tex_line
+	new_file.puts ERB.new(tex_line).result()
 }
 new_file.close
 
-`date /t >&2` # Place this in the LaTeX doc.
 %x{pdflatex output/new_file.tex --output-directory=output}

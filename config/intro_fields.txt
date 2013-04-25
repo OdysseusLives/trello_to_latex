@@ -1,0 +1,5 @@
+name
+pinned
+shortUrl
+labelNames
+lists, name

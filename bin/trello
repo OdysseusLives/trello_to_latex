@@ -16,3 +16,13 @@ lines.each { |line|
   all_configs << field
   puts trello_summary.returnsInformationUsingConfig(field)
 }
+
+tex_file = File.read('config/basic_tex_file.tex')
+new_file = File.new('output/new_file.tex', 'w+')  # "w+" Read-write, truncates existing file to zero length
+tex_file.split("\n").each { |tex_line| 
+	new_file.puts tex_line
+}
+new_file.close
+
+`date /t >&2` # Place this in the LaTeX doc.
+%x{pdflatex output/new_file.tex --output-directory=output}

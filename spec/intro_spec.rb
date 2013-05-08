@@ -39,13 +39,12 @@ describe Intro do
       paths = @intro.full_paths.to_s
       paths.should eq('[["pets", "dog", "Fido"]]')
     end    
-    it "follows a given desired path" do 
+    it "follows a given desired path: Follow cats -> name and return Muffin and Snowflake" do 
       intro = Intro.new(["cats", "name"])
-      intro.sort(@multi_cats)  # Follow cats -> name and return Muffin and Snowflake
-      paths = intro.full_paths.to_s
-      puts paths
-    end
-    it "tracks the path to a desired key" do 
+      intro.sort(@multi_cats)  
+      path_terminations = intro.full_paths.map { |single_path| 
+        single_path.last}.to_s
+      puts path_terminations
     end
   end
 

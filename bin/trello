@@ -17,7 +17,7 @@ lines.each { |line|
   puts trello_summary.returnsInformationUsingConfig(field)
 }
 
-puts Intro.new(parsed).name
+# puts Intro.new(parsed).name
 
 tex_file = File.read('config/basic_tex_file.tex')
 new_file = File.new('output/new_file.tex', 'w+')  # "w+" Read-write, truncates existing file to zero length

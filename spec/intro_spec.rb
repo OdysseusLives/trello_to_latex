@@ -12,48 +12,32 @@ describe Intro do
   end
 
   describe "#keys_to_symbol" do 
-    it "accepts an object" do 
-      @intro.keys_to_symbol(@dog).to_s.include?("Spot").should be_true
-    end
-    it "accepts a single-array" do 
-      @intro.keys_to_symbol(@cat).to_s.include?("Peach").should be_true
-    end
-    it "accepts a multiple-array" do 
-      @intro.keys_to_symbol(@cats).to_s.include?("Snowflake").should be_true
-    end
-    it "accepts a hash" do 
-      @intro.keys_to_symbol(@dogs).to_s.include?("Fido").should be_true
-    end
-    it "allows for lots of recursion" do 
-      @intro.keys_to_symbol(@user).to_s.include?("state").should be_true
+    # it "accepts an object" do 
+    #   puts @intro.keys_to_symbol(@dog)
+    #   @intro.keys_to_symbol(@dog).to_s.include?("Spot").should be_true
+    # end
+    # it "accepts a single-array" do 
+    #   puts @intro.keys_to_symbol(@cat)
+    #   @intro.keys_to_symbol(@cat).to_s.include?("Peach").should be_true
+    # end
+    # it "accepts a multiple-array" do 
+    #   puts @intro.keys_to_symbol(@cats)
+    #   @intro.keys_to_symbol(@cats).to_s.include?("Snowflake").should be_true
+    # end
+    # it "accepts a hash" do 
+    #   puts @intro.keys_to_symbol(@dogs)
+    #   @intro.keys_to_symbol(@dogs).to_s.include?("Fido").should be_true
+    # end
+    # it "allows for lots of recursion" do 
+    #   puts @intro.keys_to_symbol(@user)
+    #   @intro.keys_to_symbol(@user).to_s.include?("state").should be_true
+    # end
+    it "returns only the name of a cat" do 
+      @intro.keys_to_symbol(@cat, "name").should eq("5")
     end
   end
 
   # describe "#keys_to_symbol_array" do 
   # end
 
-
-  # describe "#getsKey" do 
-  #   it "returns the property value" do 
-  #     @dog.getsKey("name").include?("Fido").should be_true
-  #   end
-  # end
-
-  # describe "#getsKeysFromArray" do 
-  #   before :each do
-  #     @cats_name = @cats.getsKeysFromArray("cats", "name")
-  #     puts "CATS: #{@cats_name}"
-  #   end
-  #   it "accepts an array with multiple values" do 
-  #     @cats_name.kind_of?(String).should be_true
-  #   end
-  #   it "accepts an array with one value" do 
-  #     @cat_name = @cat.getsKeysFromArray("cats", "name")
-  #     @cat_name.kind_of?(String).should be_true
-  #   end
-  #   it "returns the values for key:'name'" do
-  #     @cats_name.include?("Muffin").should be_true
-  #     @cats_name.include?("Snowflake").should be_true
-  #   end
-  # end
 end

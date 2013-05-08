@@ -1,23 +1,16 @@
 #!/usr/bin/env ruby
-require_relative '../lib/grouping.rb'
 require_relative '../lib/intro.rb'
 require 'erb'
 
 file = open("input/one_card.json")
 json = file.read
 parsed = JSON.parse(json)
-trello_summary = Grouping.new(parsed)
-
 config_file = File.read('config/trello_fields.txt')
 
 lines = config_file.split("\n")
 lines.each { |line|
   field = line.split(", ")	
-  puts field
-  puts trello_summary.returnsInformationUsingConfig(field)
 }
-
-# puts Intro.new(parsed).name
 
 tex_file = File.read('config/basic_tex_file.tex')
 new_file = File.new('output/new_file.tex', 'w+')  # "w+" Read-write, truncates existing file to zero length

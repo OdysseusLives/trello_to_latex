@@ -3,8 +3,9 @@ require "json"
 
 class Intro
   attr_reader :full_paths
-  def initialize
+  def initialize(*desired_path)
     @full_paths = []
+    @desired_path = desired_path
   end
 
   def sort(*path, given_data)

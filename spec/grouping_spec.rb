@@ -32,68 +32,83 @@ describe Grouping do
       @cats_array_card.title.should eq("cats")
     end
     it "returns the message from returnsInformation" do 
-      @cats_array_card.returnsInformationUsingConfig(["cats", "name", "fur"]).index("Muffin").should_not be_nil
+      @cats_array_card.returnsInformationUsingConfig(["cats", "name", "fur"]).include?("Muffin").should be_true
     end
   end
 
   describe "#returnsInformation" do 
     it "returns a message when given a valid title" do 
-      @cats_array_card.returnsInformation("fur").index("associated").should_not be_nil
-      @example_card.returnsInformation("cards", "name", "url").index("https://").should_not be_nil
-      @example_card.returnsInformation("lists", "name").index("Waiting for").should_not be_nil
-      @pets_single_hash.returnsInformation("pets").index("Fido").should_not be_nil
-      @instruments_multi_hash_card.returnsInformation("instruments").index("strings").should_not be_nil
-      @phone_object_card.returnsInformation("phone").index("phone").should_not be_nil
-      @instruments_multi_hash_card.returnsInformation("instruments").index("instruments").should_not be_nil
-      @instruments_multi_hash_card.returnsInformation("instruments").kind_of?(String).should be_true
-      @instruments_multi_hash_card.returnsInformation("instruments").index("fiddle").should_not be_nil
-      @instruments_multi_hash_card.returnsInformation("instruments", "fiddle").index("fiddle").should_not be_nil
-      @instruments_multi_hash_card.returnsInformation("instruments", "fiddle").index("strings").should_not be_nil
-      @instruments_multi_hash_card.returnsInformation("instruments").index("clarinet").should_not be_nil
-      @instruments_multi_hash_card.returnsInformation("instruments").index("brass").should_not be_nil
-      @cars_object_card.returnsInformation("yours").index("yours").should_not be_nil
-      @cars_object_card.returnsInformation("yours").index("false").should_not be_nil
+      @cats_array_card.returnsInformation("fur").include?("associated").should be_true
+      @example_card.returnsInformation("cards", "name", "url").include?("https://").should be_true
+      @example_card.returnsInformation("lists", "name").include?("Waiting for").should be_true
+      @pets_single_hash.returnsInformation("pets").include?("Fido").should be_true
+      
+      instruments = @instruments_multi_hash_card.returnsInformation("instruments")
+      instruments.index("strings").should_not be_nil
+      @phone_object_card.returnsInformation("phone").include?("phone").should be_true
+      instruments.index("instruments").should_not be_nil
+      instruments.kind_of?(String).should be_true
+      
+      instruments.index("fiddle").should_not be_nil
+      
+      instruments.include?("fiddle").should be_true
+
+      @instruments_multi_hash_card.returnsInformation("instruments", "fiddle").include?("fiddle").should be_true
+      @instruments_multi_hash_card.returnsInformation("instruments", "fiddle").include?("strings").should be_true
+      instruments.index("clarinet").should_not be_nil
+      instruments.index("brass").should_not be_nil
+      @cars_object_card.returnsInformation("yours").include?("yours").should be_true
+      @cars_object_card.returnsInformation("yours").include?("false").should be_true
     end
+
+    def fieldsPresentIn(original, *fields)
+      fields.each{}
+    end
+
     it "returns an explaination when given a bad title" do 
       @instruments_multi_hash_card.returnsInformation("foo").should_not be_nil
       @instruments_multi_hash_card.returnsInformation("foo").kind_of?(String).should be_true
-      @instruments_multi_hash_card.returnsInformation("foo").index("associated").should_not be_nil
-      @cats_array_card.returnsInformation("monkey").index("associated").should_not be_nil
-      @blank_card.returnsInformation("boom").index("associated").should_not be_nil
+      @instruments_multi_hash_card.returnsInformation("foo").include?("associated").should be_true
+      @cats_array_card.returnsInformation("monkey").include?("associated").should be_true
+      @blank_card.returnsInformation("boom").include?("associated").should be_true
     end
   end
 
   describe "#setupWholeMessage" do 
     it "returns the title" do 
-      @instruments_multi_hash_card.setupWholeMessage("instruments", "fiddle").index("instruments").should_not be_nil
-      @instruments_multi_hash_card.setupWholeMessage("instruments").index("instruments").should_not be_nil
+      @instruments_multi_hash_card.setupWholeMessage("instruments", "fiddle").include?("instruments").should be_true
+      instrum = @instruments_multi_hash_card.setupWholeMessage("instruments")
+      instrum.include?("instruments").should be_true
     end
     it "returns a message body" do 
-      @instruments_multi_hash_card.setupWholeMessage("instruments", "fiddle").index("fiddle").should_not be_nil
-      @instruments_multi_hash_card.setupWholeMessage("instruments", "fiddle").index("strings").should_not be_nil
-      @instruments_multi_hash_card.setupWholeMessage("instruments").index("clarinet").should_not be_nil
-      @instruments_multi_hash_card.setupWholeMessage("instruments").index("brass").should_not be_nil
+      instrum = @instruments_multi_hash_card.setupWholeMessage("instruments")
+      @instruments_multi_hash_card.setupWholeMessage("instruments", "fiddle").include?("fiddle").should be_true
+      @instruments_multi_hash_card.setupWholeMessage("instruments", "fiddle").include?("strings").should be_true
+      instrum.include?("clarinet").should be_true
+      instrum.include?("brass").should be_true
     end
   end
 
   describe "#returnsMessageBody" do 
     it "calls loopInArrayToSetupMessageBody if title refers to an array" do
-      @cats_array_card.loopInArrayToSetupMessageBody("cats", "fur").index("tawny").should_not be_nil
+      @cats_array_card.loopInArrayToSetupMessageBody("cats", "fur").include?("tawny").should be_true
     end
     it "calls setupMessageBody if title refers to a object/hash" do 
-      @pets_single_hash.returnsMessageBody("pets").should_not be_nil
-      @pets_single_hash.returnsMessageBody("pets").kind_of?(String).should be_true
-      @pets_single_hash.returnsMessageBody("pets").index("Fido").should_not be_nil
+      pets = @pets_single_hash.returnsMessageBody("pets")
+      pets.should_not be_nil
+      pets.kind_of?(String).should be_true
+      pets.include?("Fido").should be_true
     end
   end
 
   describe "#loopInArrayToSetupMessageBody" do 
     it "takes each 'value' for the main key and loops to create the message body - used for arrays" do 
-      @cats_array_card.loopInArrayToSetupMessageBody("cats").should_not be_nil
-      @cats_array_card.loopInArrayToSetupMessageBody("cats").kind_of?(String).should be_true
-      @cats_array_card.loopInArrayToSetupMessageBody("cats").index("Muffin").should_not be_nil
-      @cats_array_card.loopInArrayToSetupMessageBody("cats").index("Snowflake").should_not be_nil
-      @cats_array_card.loopInArrayToSetupMessageBody("cats", "fur").index("tawny").should_not be_nil
+      cats = @cats_array_card.loopInArrayToSetupMessageBody("cats")
+      cats.should_not be_nil
+      cats.kind_of?(String).should be_true
+      cats.include?("Muffin").should be_true
+      cats.include?("Snowflake").should be_true
+      @cats_array_card.loopInArrayToSetupMessageBody("cats", "fur").include?("tawny").should be_true
     end 
   end
 
@@ -143,9 +158,10 @@ describe Grouping do
 
   describe "#failedTitleMessage" do 
     it "returns failed message" do 
-      @instruments_multi_hash_card.failedTitleMessage("foo").should_not be_nil
-      @instruments_multi_hash_card.failedTitleMessage("foo").kind_of?(String).should be_true
-      @instruments_multi_hash_card.failedTitleMessage("foo").index("associated").should_not be_nil
+      foo = @instruments_multi_hash_card.failedTitleMessage("foo")
+      foo.should_not be_nil
+      foo.kind_of?(String).should be_true
+      foo.include?("associated").should be_true
     end 
   end
 
@@ -174,20 +190,26 @@ describe Grouping do
   end
 
   describe "#formatsOneKeyValuePair" do 
+    before :each do 
+      @phone = @phone_object_card.formatsOneKeyValuePair("phone")
+    end
     it "has title in the message" do 
-      @phone_object_card.formatsOneKeyValuePair("phone").index("phone").should_not be_nil
+      @phone.include?("phone").should be_true
     end 
     it "has the value in the message" do 
-      @phone_object_card.formatsOneKeyValuePair("phone").index("true").should_not be_nil
+      @phone.include?("true").should be_true
     end
   end
 
   describe "#formatsReferenceForColoredLabels" do
+    before :each do 
+      @example = @example_card.formatsReferenceForColoredLabels
+    end
     it "returns a string" do 
-      @example_card.formatsReferenceForColoredLabels.kind_of?(String).should eq(true)      
+      @example.kind_of?(String).should eq(true)      
     end
     it "returns a string regarding a Reference" do 
-      @example_card.formatsReferenceForColoredLabels.index("Reference").should_not eq(nil)
+      @example.index("Reference").should_not eq(nil)
     end
   end
 
@@ -275,7 +297,7 @@ describe Grouping do
       title = "sedan"
       container = @cars.to_s
       start_point = @cars_object_card.startPointAfterTitle(title, container, 0)
-      end_points = [52, 32, 23, 23]
+      end_points = [52, 32, 23, 23] # there is not a great connection about what these numbers mean 
       @cars_object_card.hasNoWords?(container, start_point, end_points).should be_false
     end
     it "looks for words with a regex, part2" do 
@@ -345,6 +367,7 @@ describe Grouping do
     it "determines if the first instance of the string of 'title' is in fact the one I want" do 
       title = "bird"
       container = @bird.to_s
+      #create hashmap to iterate through these sort of tests 
       @bird_card.isTitleATitleAndNotAnAttribute?(title, container, 10).should be_false
       container.index("bird").should eq(10)
       @bird_card.isTitleATitleAndNotAnAttribute?(title, container, 20).should be_true

@@ -4,40 +4,48 @@ describe Intro do
   before :each do
     @intro = Intro.new
     @dog = JSON.parse('{"name":"Spot"}')
-    @dogs = JSON.parse('{"pets":{"dog":"Fido"}}')
+    @pet_list = JSON.parse('{"pets":{"dog":"Fido"}}')
     @cat = JSON.parse('{"cat":[{ "name":"Peach", "fur":"short", "claws":true }]}')
-    @cats = JSON.parse('{"cats":[{ "name":"Muffin", "fur":"tawny", "claws":true },
+    @multi_cats = JSON.parse('{"cats":[{ "name":"Muffin", "fur":"tawny", "claws":true },
       { "name":"Snowflake", "fur":"white", "claws":true} ]}')
     @user = JSON.parse('{"user": { "name": "foo", "age": 40, "location": { "city" : "bar", "state": "ca" } } }')
   end
 
-  describe "#keys_to_symbol" do 
-    # it "accepts an object" do 
-    #   puts @intro.keys_to_symbol(@dog)
-    #   @intro.keys_to_symbol(@dog).to_s.include?("Spot").should be_true
-    # end
-    # it "accepts a single-array" do 
-    #   puts @intro.keys_to_symbol(@cat)
-    #   @intro.keys_to_symbol(@cat).to_s.include?("Peach").should be_true
-    # end
-    # it "accepts a multiple-array" do 
-    #   puts @intro.keys_to_symbol(@cats)
-    #   @intro.keys_to_symbol(@cats).to_s.include?("Snowflake").should be_true
-    # end
-    # it "accepts a hash" do 
-    #   puts @intro.keys_to_symbol(@dogs)
-    #   @intro.keys_to_symbol(@dogs).to_s.include?("Fido").should be_true
-    # end
-    # it "allows for lots of recursion" do 
-    #   puts @intro.keys_to_symbol(@user)
-    #   @intro.keys_to_symbol(@user).to_s.include?("state").should be_true
-    # end
-    it "returns only the name of a cat" do 
-      @intro.keys_to_symbol(@cat, "name").should eq("5")
+  describe "#sort" do 
+    it "tracks the path to a key when there is a straight path: pets -> dog -> Fido" do 
+      @intro.sort(@pet_list)
+      paths = @intro.full_paths.to_s
+      paths.include?("pets").should be_true
+      paths.include?("dog").should be_true
+      paths.include?("Fido").should be_true
+    end
+    it "takes a single-array; full_paths returns a path to each terminal value" do 
+      @intro.sort(@cat)
+      paths = @intro.full_paths.to_s
+      paths.should eq('[["cat", "name", "Peach"], ["cat", "fur", "short"], ["cat", "claws", true]]')
+    end
+    it "takes a multiple-array; full_paths returns a path to each terminal value" do 
+      @intro.sort(@multi_cats)
+      paths = @intro.full_paths.to_s
+      paths.should eq('[["cats", "name", "Muffin"], ["cats", "fur", "tawny"], ["cats", "claws", true], ["cats", "name", "Snowflake"], ["cats", "fur", "white"], ["cats", "claws", true]]')
+    end
+    it "takes an object; full_paths returns a path to each terminal value" do 
+      @intro.sort(@dog)
+      paths = @intro.full_paths.to_s
+      paths.should eq('[["name", "Spot"]]')
+    end
+    it "takes a hash; full_paths returns a path to each terminal value" do 
+      @intro.sort(@pet_list)
+      paths = @intro.full_paths.to_s
+      paths.should eq('[["pets", "dog", "Fido"]]')
+    end    
+    it "follows a given desired path" do 
+      @intro.sort(@multi_cats)  # Follow cats -> name and return Muffin and Snowflake
+      paths = @intro.full_paths.to_s
+      puts paths
+    end
+    it "tracks the path to a desired key" do 
     end
   end
-
-  # describe "#keys_to_symbol_array" do 
-  # end
 
 end

@@ -2,61 +2,45 @@ require "rubygems"
 require "json"
 
 class Intro
-  def keys_to_symbol(h, *step)
+  attr_reader :full_paths
+  def initialize
+    @full_paths = []
+  end
+
+  def sort(*path, given_data)
     new_hash = {}
-    wanted = ""
-    h.each do |k,v|
-      # if steps != []
-      #   steps.each { |step| 
-      #     puts "step #{step} k #{k} v #{v}"
-      #     new_hash[k] = keys_to_symbol_logic(h, k, v, *step) if k == step 
-      #   }
-      #   new_hash["bar"] = "boo"
-      # else
-        # new_hash[k] = keys_to_symbol_logic(h, k, v, *step)
-        wanted << keys_to_symbol_logic(h, k, v, *step)
-      # end
-    end
-    # return new_hash
-    return wanted
-  end
-
-  def keys_to_symbol_logic(h, k, v, *step)
-    # new_hash = {}
-    wanted = ""
-    puts "step #{step[0]} k #{k} v #{v}"
-    if v.class == String || v.class == Fixnum || v.class == Float
-      # new_hash[k] = v if k == step[0]
-      wanted << "#{k}: #{v}" if k == step[0]
-      puts "#{k}: #{v}" if k == step[0]
-    elsif v.class == Hash
-      # new_hash[k] = keys_to_symbol(v, *step)
-      wanted = keys_to_symbol(v, *step)
-    elsif v.class == Array
-      # new_hash[k] = keys_to_symbol_array(v, *step)
-      wanted = keys_to_symbol(v, *step)
-    elsif v.class == TrueClass || v.class == FalseClass
-      puts "eep #{k} #{v}" if k == step[0] 
-      wanted << "#{k}: #{v}" if k == step[0]
-      # new_hash[k] = v.class.inspect if k == step[0]
-    else
-      raise ArgumentError, "Type not supported: #{v.class}"
-    end
-    return wanted
-  end
-
-  def keys_to_symbol_array(array, *step)
-    new_array = []
-    array.each do |i|
-      if i.class == Hash
-        new_array << keys_to_symbol(i, *step)
-      elsif i.class == Array
-        new_array << keys_to_symbol_array(i, *step)
+    given_data.each do |key, value|
+      if data_terminates_here(value) then 
+          path << key 
+          path << value
+          path.flatten!
+          add_to_full_paths(path)
+          path.pop(2)
+      elsif value.class == Hash then 
+        path << key
+        sort(path, value)
+        path.pop
+      elsif value.class == Array then 
+        value.each { |array_value|
+          path << key
+          sort(path, array_value) 
+          path.pop
+        }
       else
-        new_array << i
+        raise ArgumentError, "Type not supported: #{value.class}"
       end
     end
-    return new_array
   end
+
+  def data_terminates_here(value)
+    true if value.class == String || value.class == Fixnum || 
+      value.class == Float || value.class == TrueClass || 
+      value.class == FalseClass || value.class == NilClass 
+  end
+
+  def add_to_full_paths(path)
+    @full_paths << path.dup
+  end
+
 
 end

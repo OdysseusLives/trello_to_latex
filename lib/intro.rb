@@ -2,7 +2,7 @@ require "rubygems"
 require "json"
 
 class Intro
-  attr_reader :full_paths
+  attr_reader :full_paths, :path_terminations
   def initialize(*desired_path)
     @full_paths = []
     @desired_path = desired_path
@@ -41,6 +41,12 @@ class Intro
 
   def add_to_full_paths(path)
     @full_paths << path.dup
+    create_path_terminations(@full_paths)
+  end
+
+  def create_path_terminations(full_paths)
+    @path_terminations = full_paths.map { |single_path| 
+        single_path.last}.to_s
   end
 
 

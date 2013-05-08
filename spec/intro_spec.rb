@@ -9,6 +9,7 @@ describe Intro do
     @multi_cats = JSON.parse('{"cats":[{ "name":"Muffin", "fur":"tawny", "claws":true },
       { "name":"Snowflake", "fur":"white", "claws":true} ]}')
     @user = JSON.parse('{"user": { "name": "foo", "age": 40, "location": { "city" : "bar", "state": "ca" } } }')
+    @colors = JSON.parse('{"colors":["red", "green", "blue", "yellow"]}')
   end
 
   describe "#sort" do 
@@ -38,13 +39,20 @@ describe Intro do
       @intro.sort(@pet_list)
       paths = @intro.full_paths.to_s
       paths.should eq('[["pets", "dog", "Fido"]]')
-    end    
+    end
+    it "takes an array that doesn't hold a hash; full_paths returns a path to each terminal value" do 
+        # Requires looking if there is a key/value before starting loop "given_data.each do |key, value|";  or maybe nested loops?
+      # @intro.sort(@colors)
+      # paths = @intro.full_paths.to_s
+      # puts paths
+    end
+
     it "follows a given desired path: Follow cats -> name and return Muffin and Snowflake" do 
       intro = Intro.new(["cats", "name"])
-      intro.sort(@multi_cats)  
-      path_terminations = intro.full_paths.map { |single_path| 
-        single_path.last}.to_s
-      puts path_terminations
+      intro.sort(@multi_cats)
+      path_terminations = intro.path_terminations.to_s
+      # puts path_terminations
+      # Maybe: if desired_path == full_path{minus the terminal value} then return terminal_value
     end
   end
 

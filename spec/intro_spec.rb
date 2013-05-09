@@ -20,37 +20,53 @@ describe Intro do
       paths.include?("dog").should be_true
       paths.include?("Fido").should be_true
     end
+
     it "takes a single-array; full_paths returns a path to each terminal value" do 
       @intro.sort(@cat)
       paths = @intro.full_paths.to_s
       paths.should eq('[["cat", "name", "Peach"], ["cat", "fur", "short"], ["cat", "claws", true]]')
     end
+
     it "takes a multiple-array; full_paths returns a path to each terminal value" do 
       @intro.sort(@multi_cats)
       paths = @intro.full_paths.to_s
       paths.should eq('[["cats", "name", "Muffin"], ["cats", "fur", "tawny"], ["cats", "claws", true], ["cats", "name", "Snowflake"], ["cats", "fur", "white"], ["cats", "claws", true]]')
     end
+
     it "takes an object; full_paths returns a path to each terminal value" do 
       @intro.sort(@dog)
       paths = @intro.full_paths.to_s
       paths.should eq('[["name", "Spot"]]')
     end
+
     it "takes a hash; full_paths returns a path to each terminal value" do 
       @intro.sort(@pet_list)
       paths = @intro.full_paths.to_s
       paths.should eq('[["pets", "dog", "Fido"]]')
     end
+
     it "takes an array that doesn't hold a hash; full_paths returns a path to each terminal value" do 
-        # Requires looking if there is a key/value before starting loop "given_data.each do |key, value|";  or maybe nested loops?
-      # @intro.sort(@colors)
-      # paths = @intro.full_paths.to_s
-      # puts paths
+      @intro.sort(@colors)
+      paths = @intro.full_paths.to_s
+      paths.should eq('[["colors", "red"], ["colors", "green"], ["colors", "blue"], ["colors", "yellow"]]')
     end
+
     it "follows a given desired path: Follow cats -> name and return Muffin and Snowflake" do 
       intro = Intro.new(["cats", "name"])
       intro.sort(@multi_cats)
       path_terminations = intro.path_terminations.to_s
       path_terminations.should eq('["Muffin", "Snowflake"]')
+    end
+  end
+
+  describe "#is_a_flat_array" do 
+    it "when given index[0] of a string, understands this string is a terminal piece of data" do 
+      @intro.is_a_flat_array("string").should be_true
+    end
+
+    it "when given a hash, understands this is not a terminal piece of data" do 
+      poster = JSON.parse('{"black&white":"true"}')
+      @intro.is_a_flat_array(poster).should be_false
     end
   end
 
@@ -60,6 +76,7 @@ describe Intro do
       number_path = @intro.add_to_full_paths(numbers)
       number_path.should eq([numbers])
     end
+
     it "adds an array value to an array" do 
       numbers123 = ["one", "two", "three"]
       @intro.add_to_full_paths(numbers123)

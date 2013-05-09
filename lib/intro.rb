@@ -31,10 +31,18 @@ class Intro
 
   def prepare_to_sort_again(path, key, value)
     path << key
-    if allow_path?(path)
+    array_is_flat = is_a_flat_array(value)
+    if allow_path?(path) && !array_is_flat
       sort(path, value)
+    elsif array_is_flat
+      add_to_full_paths([key, value])
     end
     path.pop
+  end
+
+  def is_a_flat_array(value)
+    return true if data_terminates_here(value[0])
+    return false
   end
 
   def terminate_path(path, key, value)
@@ -63,7 +71,7 @@ class Intro
   def data_terminates_here(value)
     true if value.class == String || value.class == Fixnum || 
       value.class == Float || value.class == TrueClass || 
-      value.class == FalseClass || value.class == NilClass 
+      value.class == FalseClass 
   end
 
   def add_to_full_paths(path)

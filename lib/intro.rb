@@ -5,11 +5,7 @@ class Intro
   attr_reader :full_paths, :path_terminations
   def initialize(*desired_path)
     @full_paths = []
-    if desired_path == [] then 
-      @desired_path = desired_path
-    else
-      @desired_path = desired_path.flatten!
-    end
+    @desired_path = (desired_path == [] ? desired_path : desired_path.flatten!)
   end
 
   def sort(*path, given_data)

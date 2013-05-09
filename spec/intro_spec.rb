@@ -46,13 +46,35 @@ describe Intro do
       # paths = @intro.full_paths.to_s
       # puts paths
     end
-
     it "follows a given desired path: Follow cats -> name and return Muffin and Snowflake" do 
       intro = Intro.new(["cats", "name"])
       intro.sort(@multi_cats)
       path_terminations = intro.path_terminations.to_s
-      # puts path_terminations
-      # Maybe: if desired_path == full_path{minus the terminal value} then return terminal_value
+      path_terminations.should eq('["Muffin", "Snowflake"]')
+    end
+  end
+
+  describe "#add_to_full_paths" do 
+    it "adds an array value to an empty array" do 
+      numbers = ["one", "two", "three"]
+      number_path = @intro.add_to_full_paths(numbers)
+      number_path.should eq([numbers])
+    end
+    it "adds an array value to an array" do 
+      numbers123 = ["one", "two", "three"]
+      @intro.add_to_full_paths(numbers123)
+      numbers456 = ["four", "five", "six"]
+      number_path = @intro.add_to_full_paths(numbers456)
+      number_path.should eq([numbers123, numbers456])
+    end
+  end
+
+  describe "#create_path_terminations" do 
+    it "returns the last value of an array, which is the value of a path" do 
+      binder_dimensions = [["binder", "height", "11in"], ["binder", "width", "8in"], ["binder", "depth", "1.5in"]]
+      dimensions = ["11in", "8in", "1.5in"].to_s
+      terminations = @intro.create_path_terminations(binder_dimensions).to_s
+      terminations.should eq(dimensions)
     end
   end
 

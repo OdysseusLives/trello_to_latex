@@ -5,32 +5,59 @@ class Intro
   attr_reader :full_paths, :path_terminations
   def initialize(*desired_path)
     @full_paths = []
-    @desired_path = desired_path
+    if desired_path == [] then 
+      @desired_path = desired_path
+    else
+      @desired_path = desired_path.flatten!
+    end
   end
 
   def sort(*path, given_data)
-    new_hash = {}
     given_data.each do |key, value|
       if data_terminates_here(value) then 
-          path << key 
-          path << value
-          path.flatten!
-          add_to_full_paths(path)
-          path.pop(2)
+          terminate_path(path, key, value)
       elsif value.class == Hash then 
-        path << key
-        sort(path, value)
-        path.pop
+        prepare_to_sort_again(path, key, value)
       elsif value.class == Array then 
         value.each { |array_value|
-          path << key
-          sort(path, array_value) 
-          path.pop
+          prepare_to_sort_again(path, key, array_value)
         }
       else
         raise ArgumentError, "Type not supported: #{value.class}"
       end
     end
+    create_path_terminations(@full_paths)
+  end
+
+  def prepare_to_sort_again(path, key, value)
+    path << key
+    if allow_path?(path)
+      sort(path, value)
+    end
+    path.pop
+  end
+
+  def terminate_path(path, key, value)
+    path << key 
+    if allow_path?(path)
+      path << value
+      path.flatten!
+      add_to_full_paths(path)
+    end
+    path.pop(2)
+  end
+
+  def allow_path?(path)
+    path_index = path.length-1
+    if @desired_path == [] then
+        return true 
+    else
+        path.flatten!
+        if path[0..path_index] == @desired_path[0..path_index] then 
+          return true
+        end
+    end
+    return false
   end
 
   def data_terminates_here(value)
@@ -41,7 +68,6 @@ class Intro
 
   def add_to_full_paths(path)
     @full_paths << path.dup
-    create_path_terminations(@full_paths)
   end
 
   def create_path_terminations(full_paths)

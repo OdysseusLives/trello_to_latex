@@ -37,8 +37,7 @@ class Intro
   end
 
   def is_a_flat_array(value)
-    return true if data_terminates_here(value[0])
-    return false
+    return data_terminates_here(value[0]) ? true : false
   end
 
   def terminate_path(path, key, value)
@@ -52,16 +51,16 @@ class Intro
   end
 
   def allow_path?(path)
-    path_index = path.length-1
     if @desired_path == [] then
         return true 
     else
-        path.flatten!
-        if path[0..path_index] == @desired_path[0..path_index] then 
-          return true
-        end
+        return path_so_far_matches_desired_path?(path) ? true : false
     end
-    return false
+  end
+
+  def path_so_far_matches_desired_path?(path)
+    path_index = path.length-1
+    path.flatten[0..path_index] == @desired_path[0..path_index]
   end
 
   def data_terminates_here(value)
